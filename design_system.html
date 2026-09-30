@@ -1,0 +1,1918 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>BRASA — Design System</title>
+<meta name="description" content="Design system da pizzaria BRASA: vermelho fogo, tipografia editorial, componentes animados e efeitos de brasa. Combina Balkan Cuisine, La Dolce Vita, Nereo e Kampai."/>
+<meta name="theme-color" content="#0B0607"/>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230B0607'/%3E%3Cpath d='M16 4c1 5 7 7 7 14a7 7 0 0 1-14 0c0-3 2-5 3-7 1 2 2 3 3 3 0-3-1-6 1-10z' fill='%23E0283A'/%3E%3C/svg%3E"/>
+
+<!-- ============================================================
+     FONT LOADING — CDN (Google Fonts) · display=swap · preconnect
+     Mesmas famílias das referências: Playfair Display (Balkan / ref.webp),
+     Instrument Serif (La Dolce Vita), Cormorant Garamond (Nereo / Kampai),
+     Inter (todas) e Montserrat (Nereo). Mono só para tokens/código.
+     ============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Instrument+Serif:ital@0;1&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@200;300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+
+<!-- Tailwind 3.4.17 (Play CDN build) + Iconify (Solar) — mesmos arquivos usados nas referências -->
+<script src="templates/balkan-cuisine-80.aura.build/assets/176e894661aa9cdc_3.4.17"></script>
+<script src="templates/balkan-cuisine-80.aura.build/assets/851bed7af266f96a_iconify-icon.min.js"></script>
+<!-- GSAP + ScrollTrigger (Nereo / Kampai) · Lenis (Nereo) · Lucide (Nereo) -->
+<script src="templates/nereo-luxury.aura.build/assets/efc85c7eb1418197_gsap.min.js"></script>
+<script src="templates/nereo-luxury.aura.build/assets/65f6c13748b0c8d8_ScrollTrigger.min.js"></script>
+<script src="templates/nereo-luxury.aura.build/assets/0ef869066c4bbe61_lenis.min.js"></script>
+<script src="templates/nereo-luxury.aura.build/assets/344d31835187df32_lucide.min.js"></script>
+
+<script>
+/* ---- tailwind.config: tokens do Balkan (charcoal/ember/wine/cream/surface/gold)
+        + tokens do Nereo (bgPrimary/textPrimary/goldPrimary/borderGold/glassBorder) ---- */
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        charcoal: 'rgb(var(--charcoal) / <alpha-value>)',
+        surface:  'rgb(var(--surface) / <alpha-value>)',
+        surface2: 'rgb(var(--surface2) / <alpha-value>)',
+        ember:    'rgb(var(--ember) / <alpha-value>)',      /* PRIMÁRIO — vermelho fogo */
+        wine:     'rgb(var(--wine) / <alpha-value>)',
+        brasa:    'rgb(var(--brasa) / <alpha-value>)',      /* ACENTO — laranja brasa */
+        cream:    'rgb(var(--cream) / <alpha-value>)',
+        creamDim: 'rgb(var(--creamDim) / <alpha-value>)',
+        muted:    'rgb(var(--muted) / <alpha-value>)',
+        gold:     'rgb(var(--gold) / <alpha-value>)',       /* SECUNDÁRIO — ouro */
+        goldSoft: 'rgb(var(--goldSoft) / <alpha-value>)',
+        goldDeep: 'rgb(var(--goldDeep) / <alpha-value>)',
+        basil:    'rgb(var(--basil) / <alpha-value>)',      /* DECORATIVO — manjericão */
+        ok:       'rgb(var(--ok) / <alpha-value>)',
+        warn:     'rgb(var(--warn) / <alpha-value>)',
+        danger:   'rgb(var(--danger) / <alpha-value>)',
+        info:     'rgb(var(--info) / <alpha-value>)',
+        /* aliases Nereo */
+        bgPrimary: 'rgb(var(--charcoal) / <alpha-value>)',
+        bgSecondary: 'rgb(var(--surface) / <alpha-value>)',
+        textPrimary: 'rgb(var(--cream) / <alpha-value>)',
+        textSecondary: 'rgb(var(--creamDim) / <alpha-value>)',
+        textMuted: 'rgb(var(--muted) / <alpha-value>)',
+        goldPrimary: 'rgb(var(--gold) / <alpha-value>)',
+        goldSecondary: 'rgb(var(--goldDeep) / <alpha-value>)',
+        borderGold: 'rgb(var(--ember) / .45)',
+        glassBorder: 'rgba(255,190,170,.18)',
+        fuoco: { 50:'#FFF1F1',100:'#FFDCDD',200:'#FFB9BD',300:'#FF8790',400:'#F85160',500:'#E0283A',600:'#C2182B',700:'#9F1224',800:'#7A0F1C',900:'#4D0912',950:'#2A050A' },
+      },
+      fontFamily: {
+        serif: ['"Playfair Display"', 'Georgia', 'serif'],
+        display: ['"Cormorant Garamond"', '"Playfair Display"', 'serif'],
+        editorial: ['"Instrument Serif"', '"Playfair Display"', 'serif'],
+        sans: ['"Inter"', 'system-ui', '-apple-system', '"Segoe UI"', 'sans-serif'],
+        label: ['"Montserrat"', '"Inter"', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Consolas', 'monospace'],
+      },
+      boxShadow: {
+        glow: '0 0 20px rgba(224,40,58,.25)',
+        'glow-lg': '0 0 60px -10px rgba(224,40,58,.55)',
+        'glow-gold': '0 0 40px rgba(216,169,79,.15)',
+      },
+      transitionTimingFunction: { luxe: 'cubic-bezier(0.16, 1, 0.3, 1)' },
+    }
+  }
+}
+</script>
+
+<style>
+/* =====================================================================
+   TOKENS
+   ===================================================================== */
+:root{
+  --charcoal:11 6 7; --surface:22 11 13; --surface2:31 16 19;
+  --ember:224 40 58; --wine:122 15 28; --brasa:255 107 53;
+  --cream:246 236 224; --creamDim:211 196 184; --muted:148 130 122;
+  --gold:216 169 79; --goldSoft:240 210 138; --goldDeep:185 133 46;
+  --basil:78 159 93;
+  --ok:61 190 139; --warn:245 165 36; --danger:255 77 77; --info:106 167 255;
+  --ease-luxe:cubic-bezier(0.16,1,0.3,1);
+  --grad-fire:linear-gradient(120deg,#FF6B35 0%,#E0283A 55%,#9F1224 100%);
+  --grad-gold:linear-gradient(90deg,#E4B760,#B9852E);
+}
+@property --angle{syntax:'<angle>';initial-value:0deg;inherits:false}
+*{-webkit-tap-highlight-color:transparent}
+html{background:rgb(var(--charcoal))}
+body{
+  background-color:rgb(var(--charcoal));color:rgb(var(--cream));
+  font-family:'Inter',system-ui,sans-serif;font-weight:300;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:hidden;
+}
+h1,h2,h3,h4,h5,h6,.font-serif{font-family:'Playfair Display',Georgia,serif}
+::selection{background:rgb(var(--ember));color:rgb(var(--cream))}
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:rgb(var(--charcoal))}
+::-webkit-scrollbar-thumb{background:rgb(var(--surface2));border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:rgb(var(--ember))}
+:focus-visible{outline:2px solid rgb(var(--brasa));outline-offset:3px;border-radius:6px}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+.lenis.lenis-stopped{overflow:hidden}
+
+/* =====================================================================
+   UTILIDADES DAS REFERÊNCIAS
+   ===================================================================== */
+/* Balkan: fade-up + IntersectionObserver */
+.fade-up{opacity:0;transform:translateY(20px);transition:opacity .8s ease-out,transform .8s ease-out}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+/* Kampai / Nereo: reveal via GSAP ScrollTrigger */
+.reveal-up{opacity:0;transform:translateY(30px)}
+.reveal-scale{opacity:0;transform:scale(.95)}
+.reveal-on-scroll{opacity:0;transform:translateY(30px)}
+.no-js .reveal-up,.no-js .reveal-scale,.no-js .reveal-on-scroll,.no-js .fade-up{opacity:1;transform:none}
+.text-mask{clip-path:polygon(0 0,100% 0,100% 100%,0 100%);overflow:hidden}
+.hide-scrollbar::-webkit-scrollbar,.scroll-hide::-webkit-scrollbar{display:none}
+.hide-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
+/* Balkan: masonry */
+@media (min-width:768px){.masonry-grid{column-count:3;column-gap:1.5rem}.masonry-item{break-inside:avoid;margin-bottom:1.5rem}}
+/* Nereo: glass-card */
+.glass-card{
+  background:linear-gradient(135deg,rgba(38,14,17,.72) 0%,rgba(12,6,7,.86) 100%);
+  border:1px solid rgba(224,40,58,.28);
+  box-shadow:0 30px 70px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.06),0 0 40px rgba(224,40,58,.07);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  transition:border-color .5s ease,transform .5s var(--ease-luxe),box-shadow .5s ease;
+}
+.glass-card:hover{border-color:rgba(255,107,53,.55);box-shadow:0 30px 70px rgba(0,0,0,.9),inset 0 1px 0 rgba(255,255,255,.12),0 0 60px rgba(224,40,58,.2)}
+/* Nereo: ambient-glow */
+.ambient-glow{position:absolute;border-radius:50%;pointer-events:none;mix-blend-mode:screen;filter:blur(120px);opacity:.4}
+/* Nereo: zoom em imagem */
+.img-zoom-container{overflow:hidden}
+.img-zoom-container img{transition:transform 1.2s var(--ease-luxe)}
+.img-zoom-container:hover img{transform:scale(1.06)}
+/* La Dolce Vita / Kampai: grain */
+.grain{position:fixed;inset:0;pointer-events:none;z-index:70;opacity:.045;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+/* La Dolce Vita: vapor */
+.steam-container{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:2}
+.steam-puff{position:absolute;background:radial-gradient(circle,rgba(255,220,200,.22) 0%,rgba(255,255,255,0) 70%);border-radius:50%;filter:blur(20px);opacity:0;animation:rise 8s infinite ease-out}
+@keyframes rise{0%{transform:translateY(100%) scale(.5) translateX(0);opacity:0}20%{opacity:.4}80%{opacity:.2}100%{transform:translateY(-20%) scale(2) translateX(20px);opacity:0}}
+/* Nereo: shimmer de loading (cms-loading) */
+@keyframes cms-shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+.cms-loading{color:transparent!important;background:linear-gradient(90deg,rgba(255,255,255,.05) 25%,rgba(255,255,255,.14) 50%,rgba(255,255,255,.05) 75%)!important;background-size:200% 100%!important;animation:cms-shimmer 1.5s infinite!important;border-radius:12px;min-height:1em;min-width:3em}
+/* Kampai: kanji vertical → texto vertical de fundo */
+.background-kanji{position:absolute;top:0;right:20px;width:fit-content;overflow:hidden;pointer-events:none;z-index:0}
+.background-kanji__text{font-family:'Playfair Display',serif;font-size:4rem;color:rgb(var(--ember));opacity:.07;writing-mode:vertical-rl;text-orientation:mixed;white-space:nowrap;letter-spacing:.1em}
+/* Kampai: scroll horizontal */
+.menu-scroll-container{display:flex;gap:2rem;padding-left:max(1.5rem,calc((100vw - 1280px)/2 + 1.5rem));padding-right:2rem;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;scroll-snap-type:x proximity}
+.menu-scroll-container::-webkit-scrollbar{display:none}
+.menu-scroll-container>*{scroll-snap-align:start}
+/* Kampai: navbar glass */
+.nav-glass{background:rgba(11,6,7,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.06)}
+/* Kampai: mapa em tons cinza */
+.map-grayscale{filter:grayscale(100%) invert(92%) contrast(83%) sepia(30%) hue-rotate(-20deg);transition:filter .5s ease}
+.map-grayscale:hover{filter:none}
+/* Balkan: select + date/time */
+select.field{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F6ECE0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");background-repeat:no-repeat;background-position:right 1rem center;background-size:1em}
+input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-calendar-picker-indicator{filter:invert(1) opacity(.7);cursor:pointer}
+input[type=date],input[type=time]{color-scheme:dark}
+
+/* =====================================================================
+   FUNDOS ANIMADOS DE SEÇÃO  (injetados por [data-bg="..."])
+   ===================================================================== */
+.ds-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.ds-bg>*{position:absolute}
+.aur{border-radius:50%;filter:blur(110px);mix-blend-mode:screen;opacity:.34;will-change:transform}
+.aur.a{width:46vw;height:46vw;max-width:640px;max-height:640px;left:-8%;top:-10%;background:rgb(var(--ember));animation:driftA 22s ease-in-out infinite alternate}
+.aur.b{width:38vw;height:38vw;max-width:520px;max-height:520px;right:-6%;top:25%;background:rgb(var(--brasa));opacity:.22;animation:driftB 28s ease-in-out infinite alternate}
+.aur.c{width:42vw;height:42vw;max-width:580px;max-height:580px;left:30%;bottom:-18%;background:rgb(var(--wine));opacity:.6;animation:driftC 25s ease-in-out infinite alternate}
+@keyframes driftA{0%{transform:translate(0,0) scale(1)}100%{transform:translate(18vw,14vh) scale(1.25)}}
+@keyframes driftB{0%{transform:translate(0,0) scale(1.1)}100%{transform:translate(-16vw,-10vh) scale(.85)}}
+@keyframes driftC{0%{transform:translate(0,0) scale(.9)}100%{transform:translate(-14vw,-12vh) scale(1.3)}}
+.bg-dots-anim{inset:0;background-image:radial-gradient(rgb(var(--ember)) 1px,transparent 1px);background-size:32px 32px;opacity:.14;
+  -webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 40%,#000 20%,transparent 75%);mask-image:radial-gradient(ellipse 70% 60% at 50% 40%,#000 20%,transparent 75%);animation:dotsPan 24s linear infinite}
+@keyframes dotsPan{to{background-position:32px 32px}}
+.bg-grid-anim{inset:0;background-image:linear-gradient(rgba(246,236,224,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(246,236,224,.05) 1px,transparent 1px);background-size:72px 72px;
+  -webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,#000 10%,transparent 72%);mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,#000 10%,transparent 72%)}
+.bg-grid-anim::after{content:"";position:absolute;left:0;right:0;height:180px;top:-180px;background:linear-gradient(180deg,transparent,rgba(224,40,58,.16),transparent);animation:gridSweep 9s linear infinite}
+@keyframes gridSweep{to{transform:translateY(calc(100vh + 400px))}}
+.bg-rays{left:50%;top:50%;width:160vmax;height:160vmax;margin:-80vmax 0 0 -80vmax;
+  background:repeating-conic-gradient(from 0deg,rgba(224,40,58,.09) 0deg 6deg,transparent 6deg 24deg);
+  -webkit-mask-image:radial-gradient(circle,#000 0,transparent 45%);mask-image:radial-gradient(circle,#000 0,transparent 45%);animation:spin 120s linear infinite}
+.bg-conic{left:50%;top:50%;width:120vmax;height:120vmax;margin:-60vmax 0 0 -60vmax;background:conic-gradient(from var(--angle),transparent 0 55%,rgba(224,40,58,.16) 72%,rgba(255,107,53,.12) 80%,transparent 92%);
+  -webkit-mask-image:radial-gradient(circle,#000 0,transparent 40%);mask-image:radial-gradient(circle,#000 0,transparent 40%);animation:angle 26s linear infinite}
+@keyframes angle{to{--angle:360deg}}
+.bg-rings{left:50%;top:50%;width:0;height:0}
+.bg-rings i{position:absolute;border-radius:50%;border:1px dashed rgba(224,40,58,.22);transform:translate(-50%,-50%)}
+.bg-rings i:nth-child(1){width:38vmin;height:38vmin;animation:spin 60s linear infinite}
+.bg-rings i:nth-child(2){width:62vmin;height:62vmin;border-style:solid;border-color:rgba(216,169,79,.12);animation:spin 90s linear infinite reverse}
+.bg-rings i:nth-child(3){width:92vmin;height:92vmin;animation:spin 140s linear infinite}
+.bg-rings i:nth-child(4){width:128vmin;height:128vmin;border-color:rgba(224,40,58,.1);animation:spin 200s linear infinite reverse}
+.ember-dot{bottom:-12px;border-radius:50%;background:radial-gradient(circle,#FFC59E 0%,#FF6B35 45%,rgba(224,40,58,0) 72%);opacity:0;filter:blur(.3px);animation:emberRise linear infinite}
+@keyframes emberRise{0%{transform:translate3d(0,0,0) scale(1);opacity:0}10%{opacity:.95}70%{opacity:.5}100%{transform:translate3d(var(--dx,30px),-105vh,0) scale(.2);opacity:0}}
+.section-line{height:1px;background:linear-gradient(90deg,transparent,rgba(224,40,58,.6),rgba(255,107,53,.8),rgba(224,40,58,.6),transparent);position:relative;overflow:hidden}
+.section-line::after{content:"";position:absolute;top:0;left:-30%;width:30%;height:100%;background:linear-gradient(90deg,transparent,#fff,transparent);animation:sweep 5s ease-in-out infinite}
+@keyframes sweep{0%{left:-30%}60%,100%{left:130%}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* =====================================================================
+   TEXTO
+   ===================================================================== */
+.text-fire{background:linear-gradient(100deg,#FFB27A 0%,#FF6B35 25%,#E0283A 55%,#FF6B35 80%,#FFB27A 100%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;animation:gradShift 6s linear infinite}
+.text-gold-grad{background:linear-gradient(90deg,#F0D28A,#D8A94F,#F0D28A);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:gradShift 5s linear infinite}
+@keyframes gradShift{to{background-position:-220% 0}}
+.text-outline{-webkit-text-stroke:1px rgba(246,236,224,.18);color:transparent}
+.caret::after{content:"";display:inline-block;width:2px;height:.9em;margin-left:4px;background:rgb(var(--brasa));vertical-align:-.08em;animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* Escala tipográfica — papéis */
+.t-display{font-family:'Playfair Display',serif;font-weight:500;font-size:clamp(3rem,8vw,7rem);line-height:.95;letter-spacing:-.03em}
+.t-h1{font-family:'Playfair Display',serif;font-weight:500;font-size:clamp(2.75rem,6vw,4.5rem);line-height:1.05;letter-spacing:-.025em}
+.t-h2{font-family:'Playfair Display',serif;font-weight:500;font-size:clamp(2.25rem,4.5vw,3rem);line-height:1.12;letter-spacing:-.02em}
+.t-h3{font-family:'Playfair Display',serif;font-weight:500;font-size:clamp(1.75rem,3vw,2.25rem);line-height:1.2;letter-spacing:-.015em}
+.t-h4{font-family:'Playfair Display',serif;font-weight:500;font-size:1.5rem;line-height:1.3;letter-spacing:-.01em}
+.t-h5{font-family:'Playfair Display',serif;font-weight:500;font-size:1.25rem;line-height:1.35;letter-spacing:-.005em}
+.t-h6{font-family:'Montserrat',sans-serif;font-weight:600;font-size:.8125rem;line-height:1.4;letter-spacing:.18em;text-transform:uppercase}
+.t-editorial{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;font-size:clamp(2rem,4vw,3rem);line-height:1.1;letter-spacing:-.01em}
+.t-lux{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:2.25rem;line-height:1.05;letter-spacing:.02em;text-transform:uppercase}
+.t-body-lg{font-family:'Inter',sans-serif;font-weight:300;font-size:1.25rem;line-height:1.7;letter-spacing:0}
+.t-body{font-family:'Inter',sans-serif;font-weight:300;font-size:1.0625rem;line-height:1.7;letter-spacing:0}
+.t-body-sm{font-family:'Inter',sans-serif;font-weight:300;font-size:.875rem;line-height:1.6;letter-spacing:0}
+.t-caption{font-family:'Inter',sans-serif;font-weight:400;font-size:.75rem;line-height:1.5;letter-spacing:.01em}
+.t-label{font-family:'Montserrat',sans-serif;font-weight:500;font-size:.6875rem;line-height:1.3;letter-spacing:.3em;text-transform:uppercase}
+.t-eyebrow{font-family:'Inter',sans-serif;font-weight:500;font-size:.75rem;line-height:1.3;letter-spacing:.16em;text-transform:uppercase}
+.t-helper{font-family:'Inter',sans-serif;font-weight:300;font-size:.75rem;line-height:1.4;letter-spacing:.01em}
+.t-price{font-family:'Playfair Display',serif;font-style:italic;font-weight:500;font-size:1.5rem;line-height:1;letter-spacing:-.01em}
+.t-mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:400;font-size:.8125rem;line-height:1.6;letter-spacing:0}
+
+/* =====================================================================
+   BOTÕES
+   ===================================================================== */
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:.6rem;cursor:pointer;user-select:none;white-space:nowrap;overflow:hidden;isolation:isolate;
+  font-family:'Inter',sans-serif;font-weight:600;font-size:.875rem;line-height:1;transition:transform .35s var(--ease-luxe),box-shadow .4s ease,background-color .3s ease,color .3s ease,border-color .3s ease,filter .3s ease}
+.btn:active{transform:scale(.96)}
+.btn[disabled],.btn.is-disabled{opacity:.38;pointer-events:none;filter:saturate(.3)}
+.btn-sm{padding:.65rem 1.25rem;font-size:.75rem}
+.btn-md{padding:.95rem 1.9rem}
+.btn-lg{padding:1.15rem 2.4rem;font-size:.95rem}
+/* Primário — fogo (Balkan bg-ember + La Dolce Vita glow) */
+.btn-fire{color:#fff;border-radius:9999px;background:linear-gradient(120deg,#E0283A 0%,#FF5A3D 50%,#E0283A 100%);background-size:220% 100%;box-shadow:0 0 40px -10px rgba(224,40,58,.75),inset 0 1px 0 rgba(255,255,255,.25);animation:glowPulse 3.2s ease-in-out infinite}
+.btn-fire::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);transform:translateX(-130%) skewX(-18deg);transition:transform .9s var(--ease-luxe)}
+.btn-fire:hover{background-position:100% 0;transform:translateY(-2px);box-shadow:0 12px 50px -8px rgba(255,90,61,.85),inset 0 1px 0 rgba(255,255,255,.35)}
+.btn-fire:hover::before{transform:translateX(130%) skewX(-18deg)}
+.btn-fire:active{background:#9F1224;animation:none}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 30px -10px rgba(224,40,58,.6),inset 0 1px 0 rgba(255,255,255,.25)}50%{box-shadow:0 0 55px -6px rgba(255,90,61,.8),inset 0 1px 0 rgba(255,255,255,.25)}}
+/* seta circular (ref.webp: "Order Now ↗") */
+.btn .arrow-dot{display:inline-flex;align-items:center;justify-content:center;width:1.9rem;height:1.9rem;margin:-.5rem -1rem -.5rem 0;border-radius:9999px;background:rgba(11,6,7,.88);color:#fff;transition:transform .5s var(--ease-luxe),background .3s}
+.btn:hover .arrow-dot{transform:rotate(45deg) scale(1.08);background:#fff;color:rgb(var(--ember))}
+/* Ouro contornado, quadrado (Nereo) — preenchimento sobe */
+.btn-gold{border-radius:0;border:1px solid rgba(216,169,79,.6);color:rgb(var(--cream));text-transform:uppercase;letter-spacing:.2em;font-size:.6875rem;font-weight:600;background:transparent}
+.btn-gold::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--grad-gold);transform:scaleY(0);transform-origin:bottom;transition:transform .5s var(--ease-luxe)}
+.btn-gold:hover{color:rgb(var(--charcoal));border-color:rgb(var(--gold));box-shadow:0 10px 40px -10px rgba(216,169,79,.5)}
+.btn-gold:hover::before{transform:scaleY(1)}
+/* Vidro (Nereo) */
+.btn-glass{border-radius:9999px;border:1px solid rgba(246,236,224,.3);background:rgba(255,255,255,.05);backdrop-filter:blur(10px);color:rgb(var(--cream))}
+.btn-glass:hover{background:rgb(var(--cream));color:rgb(var(--charcoal));border-color:rgb(var(--cream))}
+/* Sólido creme (La Dolce Vita — RESERVAR) */
+.btn-cream{border-radius:9999px;background:rgb(var(--cream));color:rgb(var(--charcoal));letter-spacing:.06em;text-transform:uppercase;font-size:.72rem}
+.btn-cream:hover{background:#fff;box-shadow:0 0 30px rgba(246,236,224,.35)}
+/* Link com seta */
+.btn-link{color:rgb(var(--brasa));font-weight:500;padding:.25rem 0;background:linear-gradient(currentColor,currentColor) 0 100%/0 1px no-repeat;transition:background-size .5s var(--ease-luxe),color .3s}
+.btn-link:hover{background-size:100% 1px;color:rgb(var(--goldSoft))}
+.btn-link iconify-icon{transition:transform .35s var(--ease-luxe)}
+.btn-link:hover iconify-icon{transform:translate(3px,-3px)}
+/* Ícone circular */
+.btn-icon{width:3rem;height:3rem;border-radius:9999px;border:1px solid rgba(246,236,224,.18);background:rgba(255,255,255,.04);color:rgb(var(--cream));font-size:1.25rem}
+.btn-icon:hover{background:rgb(var(--ember));border-color:rgb(var(--ember));transform:translateY(-3px) rotate(-8deg);box-shadow:0 10px 30px -8px rgba(224,40,58,.8)}
+/* Ripple (JS) */
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.45);transform:scale(0);animation:rippleAnim .7s ease-out forwards;pointer-events:none;z-index:-1}
+@keyframes rippleAnim{to{transform:scale(4);opacity:0}}
+/* Loading */
+.btn.is-loading{pointer-events:none}
+.btn.is-loading .btn-label{opacity:.0}
+.btn.is-loading::after{content:"";position:absolute;width:1.15rem;height:1.15rem;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:spin .7s linear infinite}
+
+/* =====================================================================
+   INPUTS
+   ===================================================================== */
+.field{width:100%;background:rgba(255,255,255,.035);border:1px solid rgba(246,236,224,.14);color:rgb(var(--cream));border-radius:.85rem;padding:.95rem 1rem;font-size:.9rem;font-weight:300;transition:border-color .3s,box-shadow .4s,background .3s;outline:none}
+.field::placeholder{color:rgba(246,236,224,.32)}
+.field:hover{border-color:rgba(246,236,224,.3)}
+.field:focus{border-color:rgb(var(--ember));background:rgba(224,40,58,.06);box-shadow:0 0 0 4px rgba(224,40,58,.16),0 0 30px -6px rgba(224,40,58,.5)}
+.field.is-error{border-color:rgb(var(--danger));box-shadow:0 0 0 4px rgba(255,77,77,.12)}
+.field.is-ok{border-color:rgb(var(--ok));box-shadow:0 0 0 4px rgba(61,190,139,.12)}
+.field:disabled{opacity:.4;cursor:not-allowed;background:transparent;border-style:dashed}
+.float-wrap{position:relative}
+.float-wrap .field{padding-top:1.5rem;padding-bottom:.55rem}
+.float-wrap label{position:absolute;left:1rem;top:1rem;font-size:.9rem;color:rgba(246,236,224,.45);pointer-events:none;transform-origin:left top;transition:transform .35s var(--ease-luxe),color .3s}
+.float-wrap .field:focus~label,.float-wrap .field:not(:placeholder-shown)~label{transform:translateY(-.62rem) scale(.74);color:rgb(var(--brasa))}
+.field-line{background:transparent;border:0;border-bottom:1px solid rgba(216,169,79,.35);border-radius:0;padding-left:0;padding-right:0}
+.field-line:focus{background:transparent;box-shadow:0 1px 0 0 rgb(var(--gold));border-color:rgb(var(--gold))}
+.light-card .field{background:#fff;color:#1a0d0f;border-color:#e6d9cc}
+.light-card .field::placeholder{color:#a89890}
+.light-card .field:focus{border-color:rgb(var(--ember));background:#fff8f6}
+/* checkbox / radio / switch */
+.chk{appearance:none;width:1.25rem;height:1.25rem;border-radius:.4rem;border:1px solid rgba(246,236,224,.3);display:inline-grid;place-content:center;cursor:pointer;transition:all .3s var(--ease-luxe);background:transparent}
+.chk::before{content:"";width:.62rem;height:.62rem;transform:scale(0);transition:transform .3s var(--ease-luxe);background:#fff;clip-path:polygon(14% 44%,0 65%,50% 100%,100% 16%,80% 0,43% 62%)}
+.chk:checked{background:rgb(var(--ember));border-color:rgb(var(--ember));box-shadow:0 0 18px rgba(224,40,58,.6)}
+.chk:checked::before{transform:scale(1)}
+.chk.round{border-radius:9999px}
+.chk.round::before{clip-path:circle(50%);width:.5rem;height:.5rem}
+.switch{position:relative;width:2.9rem;height:1.6rem;border-radius:9999px;background:rgba(246,236,224,.12);border:1px solid rgba(246,236,224,.2);cursor:pointer;transition:background .3s,box-shadow .3s;flex:none}
+.switch::after{content:"";position:absolute;top:2px;left:2px;width:1.2rem;height:1.2rem;border-radius:50%;background:rgb(var(--cream));transition:transform .45s var(--ease-luxe),background .3s}
+.switch[aria-checked=true]{background:rgb(var(--ember));border-color:rgb(var(--ember));box-shadow:0 0 22px rgba(224,40,58,.55)}
+.switch[aria-checked=true]::after{transform:translateX(1.3rem);background:#fff}
+.stepper button{width:2.2rem;height:2.2rem;border-radius:9999px;border:1px solid rgba(246,236,224,.2);transition:all .3s}
+.stepper button:hover{background:rgb(var(--ember));border-color:rgb(var(--ember));transform:scale(1.08)}
+.range{-webkit-appearance:none;appearance:none;height:4px;border-radius:9px;background:linear-gradient(90deg,rgb(var(--ember)) var(--v,50%),rgba(246,236,224,.15) var(--v,50%));outline:none;width:100%}
+.range::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 0 0 4px rgba(224,40,58,.35),0 0 20px rgba(224,40,58,.8);cursor:grab}
+
+/* =====================================================================
+   CARDS
+   ===================================================================== */
+.spot-card{position:relative;overflow:hidden;border-radius:1.5rem;background:rgb(var(--surface));border:1px solid rgba(246,236,224,.08);transition:transform .6s var(--ease-luxe),border-color .4s,box-shadow .5s;transform-style:preserve-3d}
+.spot-card::before{content:"";position:absolute;inset:0;background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),rgba(224,40,58,.22),transparent 45%);opacity:0;transition:opacity .4s;pointer-events:none;z-index:1}
+.spot-card::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),rgba(255,140,90,.9),transparent 60%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .4s;pointer-events:none;z-index:2}
+.spot-card:hover{box-shadow:0 30px 80px -20px rgba(224,40,58,.35)}
+.spot-card:hover::before,.spot-card:hover::after{opacity:1}
+.spot-card>*{position:relative;z-index:3}
+.glow-border{position:relative;border-radius:1.5rem}
+.glow-border::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:conic-gradient(from var(--angle),transparent 0 60%,#FF6B35 78%,#E0283A 88%,transparent 100%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:angle 5s linear infinite;pointer-events:none}
+.plate{border-radius:9999px;overflow:hidden;box-shadow:0 30px 60px -10px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.06)}
+.light-card{background:#FBF5EC;color:#1a0d0f;border-radius:1.5rem;box-shadow:0 40px 80px -20px rgba(0,0,0,.7)}
+
+/* Abas de cardápio (Balkan) */
+.menu-tab{padding:.55rem 1.25rem;border-radius:9999px;font-size:.85rem;font-weight:500;white-space:nowrap;color:rgba(246,236,224,.7);transition:all .35s var(--ease-luxe);position:relative}
+.menu-tab:hover{color:rgb(var(--cream));background:rgba(255,255,255,.06)}
+.menu-tab.active{background:rgb(var(--ember));color:#fff;box-shadow:0 0 28px -6px rgba(224,40,58,.8)}
+.menu-item{animation:itemIn .6s var(--ease-luxe) both}
+@keyframes itemIn{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
+
+/* =====================================================================
+   BADGES · TOOLTIPS · MISC
+   ===================================================================== */
+.badge{display:inline-flex;align-items:center;gap:.4rem;border-radius:9999px;font-weight:500;line-height:1;white-space:nowrap}
+.badge-eyebrow{padding:.4rem .85rem;font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;border:1px solid rgba(224,40,58,.4);background:rgba(224,40,58,.12);color:#FFC9BF;backdrop-filter:blur(6px)}
+.badge-solid{padding:.35rem .8rem;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;background:rgb(var(--ember));color:#fff;box-shadow:0 0 22px -4px rgba(224,40,58,.7)}
+.badge-ghost{padding:.35rem .8rem;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;background:rgb(var(--surface));border:1px solid rgba(255,255,255,.12);color:rgba(246,236,224,.85)}
+.badge-gold{padding:.3rem .8rem;font-family:'Playfair Display',serif;font-size:.9rem;letter-spacing:.08em;background:rgba(0,0,0,.8);backdrop-filter:blur(6px);color:rgb(var(--gold));border-radius:.35rem}
+.badge-num{padding:.28rem .5rem;border-radius:.35rem;font-size:.7rem;background:rgb(var(--surface));border:1px solid rgba(255,255,255,.06);color:rgba(246,236,224,.5)}
+.badge-shine{position:relative;overflow:hidden}
+.badge-shine::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.5) 50%,transparent 65%);transform:translateX(-120%);animation:shineLoop 3.6s ease-in-out infinite}
+@keyframes shineLoop{0%{transform:translateX(-120%)}55%,100%{transform:translateX(120%)}}
+.dot-live{position:relative;width:.5rem;height:.5rem;border-radius:9999px;background:rgb(var(--ok))}
+.dot-live::after{content:"";position:absolute;inset:0;border-radius:inherit;background:inherit;animation:ping 1.6s cubic-bezier(0,0,.2,1) infinite}
+@keyframes ping{75%,100%{transform:scale(2.8);opacity:0}}
+.tip{position:relative;display:inline-flex}
+.tip>.tip-box{position:absolute;left:50%;bottom:calc(100% + 12px);transform:translate(-50%,8px) scale(.94);opacity:0;pointer-events:none;z-index:40;white-space:nowrap;
+  padding:.5rem .8rem;border-radius:.6rem;font-size:.72rem;font-weight:500;letter-spacing:.02em;background:rgb(var(--cream));color:rgb(var(--charcoal));box-shadow:0 14px 40px -8px rgba(0,0,0,.7);transition:opacity .25s,transform .45s var(--ease-luxe)}
+.tip>.tip-box::after{content:"";position:absolute;left:50%;top:100%;width:9px;height:9px;background:inherit;transform:translate(-50%,-55%) rotate(45deg)}
+.tip:hover>.tip-box,.tip:focus-within>.tip-box{opacity:1;transform:translate(-50%,0) scale(1)}
+.tip.below>.tip-box{bottom:auto;top:calc(100% + 12px);transform:translate(-50%,-8px) scale(.94)}
+.tip.below>.tip-box::after{top:auto;bottom:100%;transform:translate(-50%,55%) rotate(45deg)}
+.tip.below:hover>.tip-box{transform:translate(-50%,0) scale(1)}
+.tip.rich>.tip-box{white-space:normal;width:250px;padding:0;background:transparent;box-shadow:none}
+.tip.rich>.tip-box::after{display:none}
+.tip.dark>.tip-box{background:rgb(var(--ember));color:#fff}
+.tip.left>.tip-box{left:auto;right:calc(100% + 12px);bottom:50%;transform:translate(8px,50%) scale(.94)}
+.tip.left>.tip-box::after{left:100%;top:50%;transform:translate(-55%,-50%) rotate(45deg)}
+.tip.left:hover>.tip-box{transform:translate(0,50%) scale(1)}
+.marquee{display:flex;width:max-content;animation:marquee 38s linear infinite}
+.marquee:hover{animation-play-state:paused}
+@keyframes marquee{to{transform:translateX(-50%)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes floatRot{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-12px) rotate(2deg)}}
+@keyframes kenburns{0%{transform:scale(1.05) translate(0,0)}100%{transform:scale(1.18) translate(-2%,-2%)}}
+@keyframes dash{to{stroke-dashoffset:-200}}
+@keyframes flicker{0%,100%{opacity:1;transform:scale(1)}30%{opacity:.85;transform:scale(1.04)}60%{opacity:.95;transform:scale(.98)}}
+.anim-float{animation:float 6s ease-in-out infinite}
+.anim-spin-slow{animation:spin 40s linear infinite}
+.anim-flicker{animation:flicker 2.4s ease-in-out infinite}
+.modal-backdrop{position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;padding:1.25rem;background:rgba(6,2,3,.78);backdrop-filter:blur(10px);opacity:0;transition:opacity .4s}
+.modal-backdrop.open{display:flex}
+.modal-backdrop.show{opacity:1}
+.modal-panel{transform:translateY(30px) scale(.95);opacity:0;transition:transform .6s var(--ease-luxe),opacity .5s}
+.modal-backdrop.show .modal-panel{transform:none;opacity:1}
+.toast{position:fixed;left:50%;bottom:28px;z-index:120;transform:translate(-50%,30px);opacity:0;transition:all .5s var(--ease-luxe);pointer-events:none}
+.toast.show{transform:translate(-50%,0);opacity:1}
+#cursor-glow{position:fixed;left:0;top:0;width:520px;height:520px;margin:-260px 0 0 -260px;border-radius:50%;pointer-events:none;z-index:1;background:radial-gradient(circle,rgba(224,40,58,.13),transparent 62%);mix-blend-mode:screen;will-change:transform}
+#progress{position:fixed;left:0;top:0;height:2px;width:100%;transform-origin:left;transform:scaleX(0);background:linear-gradient(90deg,#E0283A,#FF6B35,#F0D28A);z-index:100;box-shadow:0 0 12px rgba(255,107,53,.8)}
+.side-link{position:relative;font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;color:rgb(var(--creamDim));transition:color .3s}
+.side-link::after{content:"";position:absolute;left:0;bottom:-4px;height:1px;width:0;background:rgb(var(--brasa));transition:width .3s}
+.side-link:hover,.side-link.active{color:rgb(var(--brasa))}
+.side-link:hover::after,.side-link.active::after{width:100%}
+.spec-table{width:100%;border-collapse:collapse;font-size:.8rem}
+.spec-table th{font-family:'Montserrat',sans-serif;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:rgb(var(--brasa));text-align:left;padding:.85rem 1rem;border-bottom:1px solid rgba(224,40,58,.35);white-space:nowrap}
+.spec-table td{padding:.8rem 1rem;border-bottom:1px solid rgba(246,236,224,.07);color:rgb(var(--creamDim));vertical-align:top}
+.spec-table tr{transition:background .3s}
+.spec-table tbody tr:hover{background:rgba(224,40,58,.06)}
+.code{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:#FFB9A6;background:rgba(224,40,58,.1);border:1px solid rgba(224,40,58,.2);padding:.12rem .4rem;border-radius:.35rem;white-space:nowrap}
+pre.codeblock{font-family:'JetBrains Mono',monospace;font-size:.72rem;line-height:1.7;color:#F6ECE0;background:rgba(0,0,0,.45);border:1px solid rgba(246,236,224,.08);border-radius:1rem;padding:1.1rem 1.25rem;overflow:auto;tab-size:2}
+.k{color:#FF8790}.s{color:#F0D28A}.c{color:#7f6e68}.n{color:#8fd6b3}
+.reveal-up.revealed,.reveal-scale.revealed,.reveal-on-scroll.revealed{opacity:1;transform:none}
+.drawer-panel{transform:translateX(100%);transition:transform .6s var(--ease-luxe)}
+.modal-backdrop.show .drawer-panel{transform:none}
+
+/* =====================================================================
+   TEMA MINIMALISTA — efeitos viram opt-in (.fx-glow, .fx-shine, .badge-shine, .glow-border)
+   ===================================================================== */
+.aur{filter:blur(150px)}
+.aur.a{opacity:.1}.aur.b{display:none}.aur.c{opacity:.14}
+.bg-dots-anim{opacity:.07;animation:none}
+.bg-grid-anim{opacity:.6}.bg-grid-anim::after{display:none}
+.section-line{background:rgba(246,236,224,.08)}.section-line::after{display:none}
+.grain{opacity:.03}
+#cursor-glow{display:none}
+#progress{background:rgb(var(--ember));box-shadow:none;height:2px}
+.anim-flicker,.anim-float{animation:none}
+.shadow-glow{box-shadow:none!important}
+.text-fire{background:none;-webkit-text-fill-color:currentColor;color:#F85160;animation:none}
+.text-gold-grad{background:none;-webkit-text-fill-color:currentColor;color:rgb(var(--gold));animation:none}
+.btn-fire{background:rgb(var(--ember));background-size:auto;box-shadow:none;animation:none;font-weight:500}
+.btn-fire::before{display:none}
+.btn-fire:hover{background:#C2182B;transform:none;box-shadow:none}
+.btn-fire:active{background:#9F1224}
+.btn-fire.fx-glow{animation:glowPulse 3.2s ease-in-out infinite}
+.btn-fire.fx-shine::before{display:block}.btn-fire.fx-shine:hover::before{transform:translateX(130%) skewX(-18deg)}
+.btn-icon:hover{transform:none;box-shadow:none;background:rgb(var(--ember))}
+.btn-gold:hover{box-shadow:none}
+.glass-card{background:rgba(22,11,13,.72);border:1px solid rgba(246,236,224,.1);box-shadow:0 20px 50px rgba(0,0,0,.5);backdrop-filter:blur(16px)}
+.glass-card:hover{border-color:rgba(246,236,224,.22);box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.spot-card::before,.spot-card::after{display:none}
+.spot-card:hover{box-shadow:none;border-color:rgba(246,236,224,.2)}
+.field:focus{background:rgba(255,255,255,.04);box-shadow:0 0 0 3px rgba(224,40,58,.18)}
+.chk:checked,.switch[aria-checked=true]{box-shadow:none}
+.menu-tab.active{box-shadow:none}
+.badge-eyebrow{border-color:rgba(246,236,224,.18);background:transparent;color:rgb(var(--creamDim))}
+.badge-solid{box-shadow:none}
+.range::-webkit-slider-thumb{box-shadow:0 0 0 4px rgba(224,40,58,.25)}
+.stepper button:hover{transform:none}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+  .fade-up,.reveal-up,.reveal-scale,.reveal-on-scroll{opacity:1!important;transform:none!important}
+}
+</style>
+</head>
+<body class="antialiased selection:bg-ember selection:text-cream text-base font-sans relative no-js">
+<script>document.body.classList.remove('no-js')</script>
+
+<!-- Progresso de scroll · cursor glow · grain -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="fl" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#9F1224"/><stop offset=".55" stop-color="#E0283A"/><stop offset="1" stop-color="#FF8A4C"/></linearGradient></defs></svg>
+<div id="progress"></div>
+<div id="cursor-glow" class="hidden md:block"></div>
+<div class="grain"></div>
+
+<!-- Preloader (Nereo / Kampai) -->
+<div id="preloader" class="fixed inset-0 z-[110] flex flex-col items-center justify-center bg-charcoal">
+  <div class="relative w-24 h-24 mb-6 flex items-center justify-center">
+    <svg class="absolute inset-0 w-full h-full anim-spin-slow" viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="46" stroke="#E0283A" stroke-width="1" stroke-dasharray="4 6" stroke-linecap="round"/></svg>
+    <svg class="w-11 h-11 anim-flicker" viewBox="0 0 32 32"><path d="M16 3c1 5 8 8 8 15a8 8 0 0 1-16 0c0-3.2 2-5.4 3.400-7.500 1 2.200 2 3.300 3.400 3.300-.4-3.200-.9-6.700 1.200-10.800z" fill="url(#fl)"/></svg>
+  </div>
+  <h2 class="font-serif text-2xl tracking-[0.35em] uppercase text-cream">Brasa</h2>
+  <p class="text-[9px] tracking-[0.5em] uppercase text-brasa mt-2">Design System</p>
+  <div class="w-40 h-[1px] bg-gradient-to-r from-transparent via-ember to-transparent mt-6 overflow-hidden relative"><div class="h-full bg-white absolute left-0 top-0 w-1/2" id="pre-bar"></div></div>
+</div>
+
+<!-- =================== NAVBAR (Balkan sticky + Nereo underline + Kampai hide-on-scroll) =================== -->
+<header id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-500 border-b border-transparent">
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-12 h-20 flex items-center justify-between">
+    <a href="#hero" class="flex items-center gap-3 group">
+      <svg class="w-9 h-9 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6" viewBox="0 0 32 32"><path d="M16 3c1 5 8 8 8 15a8 8 0 0 1-16 0c0-3.200 2-5.400 3.400-7.500 1 2.200 2 3.300 3.400 3.300-.4-3.200-.9-6.700 1.200-10.800z" fill="url(#fl)"/></svg>
+      <span class="flex flex-col leading-none">
+        <span class="font-serif text-lg tracking-[0.28em] uppercase text-cream">Brasa</span>
+        <span class="text-[7.5px] tracking-[0.38em] uppercase text-brasa mt-1">Pizzeria a lenha</span>
+      </span>
+    </a>
+    <nav class="hidden lg:flex items-center gap-10">
+      <a class="side-link" href="#tipografia">Tipografia</a>
+      <a class="side-link" href="#cores">Cores</a>
+      <a class="side-link" href="#componentes">Componentes</a>
+      <a class="side-link" href="#icones">Ícones</a>
+      <a class="side-link" href="#animacoes">Animações</a>
+    </nav>
+    <div class="flex items-center gap-4">
+      <a href="#componentes" data-magnetic data-ripple class="hidden sm:inline-flex btn btn-fire btn-sm">Explorar <span class="arrow-dot"><iconify-icon icon="solar:arrow-right-up-linear"></iconify-icon></span></a>
+      <button id="mobile-menu-btn" aria-label="Abrir menu" class="lg:hidden text-cream p-2 hover:text-brasa transition-colors"><iconify-icon class="text-2xl" icon="solar:hamburger-menu-linear"></iconify-icon></button>
+    </div>
+  </div>
+</header>
+<!-- Drawer mobile (Nereo) -->
+<div id="mobile-menu" class="fixed inset-0 z-[60] bg-charcoal translate-x-full transition-transform duration-500 ease-luxe flex flex-col justify-between p-8 pt-28">
+  <div class="ds-bg" data-bg="aurora"></div>
+  <nav class="relative flex flex-col gap-6 z-10">
+    <a class="mobile-link text-4xl font-serif uppercase tracking-widest text-cream hover:text-brasa transition-colors" href="#tipografia">Tipografia</a>
+    <a class="mobile-link text-4xl font-serif uppercase tracking-widest text-cream hover:text-brasa transition-colors" href="#cores">Cores</a>
+    <a class="mobile-link text-4xl font-serif uppercase tracking-widest text-cream hover:text-brasa transition-colors" href="#componentes">Componentes</a>
+    <a class="mobile-link text-4xl font-serif uppercase tracking-widest text-cream hover:text-brasa transition-colors" href="#icones">Ícones</a>
+    <a class="mobile-link text-4xl font-serif uppercase tracking-widest text-cream hover:text-brasa transition-colors" href="#animacoes">Animações</a>
+  </nav>
+  <div class="relative z-10 border-t border-ember/30 pt-6"><p class="text-xs text-muted tracking-wider uppercase">Reservas</p><p class="text-lg text-brasa font-serif mt-1">+55 (11) 4002-8922</p></div>
+</div>
+
+<!-- =================================================================
+     1) HERO — demonstração das capacidades do design system
+     ================================================================= -->
+<section id="hero" class="relative min-h-screen w-full overflow-hidden bg-charcoal flex items-center pt-24 pb-24">
+  <!-- foto de fundo (Balkan) com ken burns + gradientes -->
+  <div class="absolute inset-0 z-0">
+    <img alt="" class="w-full h-full object-cover opacity-[.18]" src="templates/balkan-cuisine-80.aura.build/assets/344cce025445f33c_DSC01722_5-scaled.jpg"/>
+    <div class="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/60 to-charcoal/30"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-charcoal via-charcoal/70 to-transparent"></div>
+    
+  </div>
+  <div class="ds-bg" data-bg="aurora"></div>
+  <canvas id="hero-fire" class="absolute inset-0 w-full h-full z-[3] pointer-events-none opacity-30"></canvas>
+  
+
+  <div class="relative z-10 max-w-[1400px] w-full mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-12 gap-14 items-center">
+    <!-- coluna texto -->
+    <div class="lg:col-span-7 flex flex-col items-start text-left space-y-8">
+      <div id="hero-eyebrow" class="flex flex-wrap items-center gap-4 py-1">
+        <div class="w-12 h-[1px] bg-ember"></div>
+        <span class="t-label text-brasa">Design System · v1.0</span>
+        
+      </div>
+      <h1 id="hero-title" class="t-display text-cream">
+        <span class="text-mask block pb-[.08em]"><span class="hl block">Toda fatia</span></span>
+        <span class="text-mask block pb-[.14em]"><span class="hl block">nasce do <em class="font-editorial italic text-fire pr-2" style="font-size:1.12em">fogo</em></span></span>
+      </h1>
+      <div id="hero-divider" class="flex items-center gap-3 w-44 origin-left">
+        <div class="w-full h-[1px] bg-ember/50"></div>
+        <svg class="w-2.5 h-2.5 fill-ember flex-shrink-0 anim-spin-slow" viewBox="0 0 10 10"><polygon points="5,0 7,3 10,5 7,7 5,10 3,7 0,5 3,3"/></svg>
+        <div class="w-full h-[1px] bg-ember/50"></div>
+      </div>
+      <p id="hero-desc" class="t-body-lg text-cream/75 max-w-xl">Vermelho, preto e uma tipografia editorial. Um sistema simples e quente para a pizzaria.</p>
+      <div id="hero-ctas" class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto pt-2">
+        <a href="#componentes" data-magnetic data-ripple class="btn btn-fire btn-lg">Ver componentes <span class="arrow-dot"><iconify-icon icon="solar:arrow-right-up-linear"></iconify-icon></span></a>
+        <a href="#cores" data-magnetic data-ripple class="btn btn-glass btn-lg">Ver cores</a>
+      </div>
+      <div id="hero-badges" class="grid grid-cols-3 gap-6 pt-8 border-t border-ember/20 w-full max-w-[600px]">
+        <div class="flex items-center gap-3"><i data-lucide="flame" class="text-cream/60 w-5 h-5 flex-shrink-0"></i><span class="t-label !text-[9px] !tracking-[.2em] text-creamDim leading-tight">Forno a lenha 450°</span></div>
+        <div class="flex items-center gap-3 border-l border-ember/20 pl-4"><i data-lucide="wheat" class="text-cream/60 w-5 h-5 flex-shrink-0"></i><span class="t-label !text-[9px] !tracking-[.2em] text-creamDim leading-tight">Massa 72 horas</span></div>
+        <div class="flex items-center gap-3 border-l border-ember/20 pl-4"><i data-lucide="award" class="text-cream/60 w-5 h-5 flex-shrink-0"></i><span class="t-label !text-[9px] !tracking-[.2em] text-creamDim leading-tight">Melhor da cidade</span></div>
+      </div>
+    </div>
+
+    <!-- coluna visual -->
+    <div class="lg:col-span-5 relative flex justify-center items-center">
+      <div id="hero-visual" class="relative w-full max-w-[560px] aspect-square">
+        
+        
+        <!-- prato -->
+        <div id="hero-plate" class="absolute inset-[4%] !rounded-full"><div class="plate w-full h-full">
+          <img id="hero-pizza" alt="Pizza artesanal" class="w-full h-full object-cover scale-[1.18] anim-spin-slow" style="animation-duration:90s" src="templates/italian-restaurant-2.aura.build/assets/122646786d43ef3e_photo-1565299624946-b28f40a0ae.avif"/>
+          <div class="absolute inset-0 rounded-full" style="box-shadow:inset 0 0 80px rgba(11,6,7,.55),inset 0 0 0 1px rgba(255,255,255,.08)"></div>
+        </div></div>
+        <!-- chip avaliação (Nereo glass-card) -->
+        <div class="hero-chip glass-card absolute -left-2 top-[6%] sm:-left-10 p-4 rounded-[20px] w-[190px]" data-depth="14">
+          <div class="flex items-center justify-between">
+            <div><h3 class="font-serif text-2xl font-light tracking-wider text-cream">4.9<span class="text-muted text-base"> / 5</span></h3>
+              <div class="flex gap-0.5 mt-1 text-gold"><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon></div></div>
+            <div class="w-10 h-10 rounded-full border border-ember/40 flex items-center justify-center bg-ember/10"><iconify-icon class="text-brasa text-lg" icon="solar:medal-star-linear"></iconify-icon></div>
+          </div>
+          <p class="text-[9px] text-muted tracking-[.2em] mt-2 uppercase">+14 mil avaliações</p>
+        </div>
+        <!-- chip lista (ref.webp) -->
+        <div class="hero-chip glass-card absolute -right-2 bottom-[4%] sm:-right-8 p-5 rounded-2xl w-[250px] space-y-3" data-depth="22">
+          <div class="flex items-start gap-3"><iconify-icon class="text-brasa text-xl mt-0.5" icon="solar:fire-linear"></iconify-icon><div><div class="text-[13px] font-medium text-cream">Forno a lenha</div><div class="text-[11px] text-muted font-light">Borda alta, leopardo e fumaça</div></div></div>
+          <div class="flex items-start gap-3"><iconify-icon class="text-gold text-xl mt-0.5" icon="solar:chef-hat-linear"></iconify-icon><div><div class="text-[13px] font-medium text-cream">Pizzaiolo à vista</div><div class="text-[11px] text-muted font-light">Balcão de frente pro fogo</div></div></div>
+          <div class="flex items-start gap-3"><iconify-icon class="text-ember text-xl mt-0.5" icon="solar:delivery-linear"></iconify-icon><div><div class="text-[13px] font-medium text-cream">Entrega em 30 min</div><div class="text-[11px] text-muted font-light">Caixa térmica que segura o crocante</div></div></div>
+        </div>
+        <!-- prato pequeno -->
+        <div class="hero-chip plate absolute -left-4 bottom-[8%] w-[30%] aspect-square border-2 border-charcoal anim-float" data-depth="30" style="animation-duration:7s">
+          <img alt="Massa" class="w-full h-full object-cover" src="templates/italian-restaurant-2.aura.build/assets/80a394130c1ac232_photo-1621996346565-e3dbc646d9.avif"/>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- indicador de scroll (Kampai) -->
+  <a href="#faixa" class="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-3 text-cream/50 hover:text-brasa transition-colors">
+    <span class="text-[9px] uppercase tracking-[.3em]">Role</span>
+    <span class="w-[1px] h-14 bg-gradient-to-b from-ember to-transparent relative overflow-hidden"><span class="absolute left-0 top-0 w-full h-4 bg-white/80" style="animation:scrollDot 2s ease-in-out infinite"></span></span>
+  </a>
+</section>
+<style>@keyframes scrollDot{0%{transform:translateY(-100%)}100%{transform:translateY(400%)}}</style>
+
+<!-- faixa marquee -->
+<div id="faixa" class="relative overflow-hidden border-y border-white/10 bg-surface py-4">
+  <div class="marquee">
+    <div class="flex items-center gap-10 pr-10 text-cream/60 font-serif italic text-xl whitespace-nowrap" data-marquee>
+      <span>Massa de 72 horas</span><iconify-icon icon="solar:fire-bold" class="text-ember text-sm"></iconify-icon><span>Forno a lenha</span><iconify-icon icon="solar:fire-bold" class="text-ember text-sm"></iconify-icon><span>Tomate San Marzano</span><iconify-icon icon="solar:fire-bold" class="text-ember text-sm"></iconify-icon><span>Burrata fresca</span><iconify-icon icon="solar:fire-bold" class="text-ember text-sm"></iconify-icon><span>Manjericão do dia</span><iconify-icon icon="solar:fire-bold" class="text-ember text-sm"></iconify-icon>
+    </div>
+  </div>
+</div>
+
+<main class="relative">
+
+<!-- =================================================================
+     2) TIPOGRAFIA
+     ================================================================= -->
+<section id="tipografia" class="relative py-24 lg:py-36 overflow-hidden bg-charcoal">
+  <div class="ds-bg" data-bg="dots"></div>
+  <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12">
+    <div class="text-center space-y-4 mb-20 reveal-up">
+      <div class="flex items-center justify-center gap-3"><div class="w-8 h-[1px] bg-ember"></div><span class="t-label text-brasa">02 · Tipografia</span><div class="w-8 h-[1px] bg-ember"></div></div>
+      <h2 class="t-h1">Serifas de <em class="font-editorial text-fire pr-1">restaurante</em>,<br class="hidden md:block"/> legibilidade de app</h2>
+      <p class="t-body text-creamDim max-w-2xl mx-auto">Playfair Display (Balkan + ref.webp) para títulos, Instrument Serif itálico (La Dolce Vita) e Cormorant Garamond (Nereo / Kampai) para acentos, Inter para corpo e Montserrat para labels em caixa-alta.</p>
+    </div>
+
+    <!-- famílias -->
+    <h3 class="t-h6 text-brasa mb-6 reveal-up">2.1 · Font families</h3>
+    <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6 mb-20" id="font-cards"></div>
+
+    <!-- loading -->
+    <h3 class="t-h6 text-brasa mb-6 reveal-up">2.2 · Estratégia de carregamento</h3>
+    <div class="grid lg:grid-cols-2 gap-6 mb-24">
+      <div class="spot-card p-7 reveal-up">
+        <pre class="codeblock"><span class="c">&lt;!-- 1. Conexão antecipada --&gt;</span>
+&lt;<span class="k">link</span> rel=<span class="s">"preconnect"</span> href=<span class="s">"https://fonts.googleapis.com"</span>/&gt;
+&lt;<span class="k">link</span> rel=<span class="s">"preconnect"</span> href=<span class="s">"https://fonts.gstatic.com"</span> crossorigin/&gt;
+<span class="c">&lt;!-- 2. Uma única requisição · display=swap --&gt;</span>
+&lt;<span class="k">link</span> rel=<span class="s">"stylesheet"</span> href=<span class="s">"https://fonts.googleapis.com/css2
+  ?family=Playfair+Display:ital,wght@0,400..800;1,400..600
+  &amp;family=Instrument+Serif:ital@0;1
+  &amp;family=Cormorant+Garamond:ital,wght@0,300..700;1,300..500
+  &amp;family=Inter:wght@200..700
+  &amp;family=Montserrat:wght@300..700
+  &amp;family=JetBrains+Mono:wght@400;500
+  &amp;display=swap"</span>/&gt;</pre>
+      </div>
+      <div class="spot-card p-2 reveal-up overflow-x-auto">
+        <table class="spec-table">
+          <thead><tr><th>Item</th><th>Decisão</th></tr></thead>
+          <tbody>
+            <tr><td class="text-cream">Origem</td><td>CDN Google Fonts (mesma origem das 4 referências). Alternativa offline: <span class="code">assets/*_css2.css</span> + <span class="code">.woff2</span> locais, já presentes nas pastas de templates.</td></tr>
+            <tr><td class="text-cream">Estratégia</td><td><span class="code">font-display: swap</span> — texto aparece imediatamente com fallback; troca sem bloqueio.</td></tr>
+            <tr><td class="text-cream">Faixa de pesos</td><td>Playfair 400–800 · Cormorant 300–700 · Inter 200–700 · Montserrat 300–700 · Mono 400/500. Itálicos apenas onde há uso (Playfair 400–600, Cormorant 300–500, Instrument 400).</td></tr>
+            <tr><td class="text-cream">Subsets</td><td>latin + latin-ext (acentos PT-BR). O navegador só baixa os subsets usados via <span class="code">unicode-range</span>.</td></tr>
+            <tr><td class="text-cream">Preload</td><td>Em produção, <span class="code">rel="preload" as="font"</span> apenas para Playfair 500 e Inter 300 (acima da dobra).</td></tr>
+            <tr><td class="text-cream">Aplicação</td><td><span class="code">font-serif · font-display · font-editorial · font-sans · font-label · font-mono</span> (tailwind.config → fontFamily).</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- escala -->
+    <h3 class="t-h6 text-brasa mb-6 reveal-up">2.3 · Escala tipográfica completa <span class="text-muted normal-case tracking-normal font-light">— valores lidos ao vivo do CSS (getComputedStyle)</span></h3>
+    <div class="space-y-4 mb-24" id="type-scale">
+      <!-- linhas geradas por JS a partir de TYPE_ROLES -->
+    </div>
+
+    <!-- tratamentos -->
+    <h3 class="t-h6 text-brasa mb-6 reveal-up">2.4 · Tratamentos de texto</h3>
+    <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-6">
+      <div class="spot-card p-7 reveal-up"><div class="t-h3 text-fire">Acento vermelho</div><p class="t-body-sm text-muted mt-4"><span class="code">.text-fire</span> — palavra em destaque (fuoco-400)</p></div>
+      <div class="spot-card p-7 reveal-up"><div class="t-h3 text-gold-grad">Ouro</div><p class="t-body-sm text-muted mt-4"><span class="code">.text-gold-grad</span> — preços e selos</p></div>
+      <div class="spot-card p-7 reveal-up"><div class="t-h3 text-outline" style="-webkit-text-stroke:1px rgba(246,236,224,.5)">Contorno</div><p class="t-body-sm text-muted mt-4"><span class="code">.text-outline</span> — tipografia gigante de fundo</p></div>
+      <div class="spot-card p-7 reveal-up"><div class="t-h3 caret">Cursor</div><p class="t-body-sm text-muted mt-4"><span class="code">.caret</span> — <span class="code">blink 1s steps(2)</span></p></div>
+    </div>
+  </div>
+</section>
+<div class="section-line"></div>
+
+<!-- =================================================================
+     3) SISTEMA DE CORES
+     ================================================================= -->
+<section id="cores" class="relative py-24 lg:py-36 overflow-hidden bg-surface">
+  <div class="ds-bg" data-bg="grid"></div>
+  <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12">
+    <div class="text-center space-y-4 mb-20 reveal-up">
+      <div class="flex items-center justify-center gap-3"><div class="w-8 h-[1px] bg-ember"></div><span class="t-label text-brasa">03 · Sistema de cores</span><div class="w-8 h-[1px] bg-ember"></div></div>
+      <h2 class="t-h1">Vermelho <em class="font-editorial text-fire pr-1">fogo</em> sobre<br class="hidden md:block"/> preto de carvão</h2>
+      <p class="t-body text-creamDim max-w-2xl mx-auto">Tokens do Balkan (<span class="code">charcoal · ember · wine · cream · surface · gold</span>) e do Nereo (<span class="code">bgPrimary · textPrimary · goldPrimary · borderGold</span>) reescritos com o vermelho como cor de marca. Clique em qualquer cartão para copiar o hex.</p>
+    </div>
+
+    <h3 class="t-h6 text-brasa mb-6 reveal-up">3.1 · Rampa primária — fuoco 50 → 950</h3>
+    <div id="ramp" class="grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-11 rounded-2xl overflow-hidden mb-20 reveal-up border border-white/10"></div>
+
+    <h3 class="t-h6 text-brasa mb-6 reveal-up">3.2 · Tokens — hex · RGB · HSL · variantes de opacidade · contraste</h3>
+    <div id="swatches" class="space-y-14 mb-24"></div>
+
+    <h3 class="t-h6 text-brasa mb-6 reveal-up">3.3 · Gradientes</h3>
+    <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6 mb-24" id="gradients"></div>
+
+    <h3 class="t-h6 text-brasa mb-6 reveal-up">3.4 · Papéis semânticos</h3>
+    <div class="spot-card overflow-x-auto mb-24 reveal-up">
+      <table class="spec-table min-w-[820px]">
+        <thead><tr><th>Papel</th><th>Token</th><th>Tailwind</th><th>Uso</th><th>Participa de gradiente</th></tr></thead>
+        <tbody>
+          <tr><td class="text-cream">Primário</td><td><span class="code">--ember #E0283A</span></td><td><span class="code">bg-ember · text-ember</span></td><td>CTA, links ativos, foco, seleção, bordas de destaque, glow</td><td>Sim — <span class="code">grad-fire</span></td></tr>
+          <tr><td class="text-cream">Secundário</td><td><span class="code">--gold #D8A94F</span></td><td><span class="code">text-gold · border-gold</span></td><td>Preços, estrelas, selos, botão contornado, linhas ornamentais</td><td>Sim — <span class="code">grad-gold</span></td></tr>
+          <tr><td class="text-cream">Acento</td><td><span class="code">--brasa #FF6B35</span></td><td><span class="code">text-brasa · bg-brasa</span></td><td>Eyebrows, hover de links, brasas/faíscas, fim quente do gradiente</td><td>Sim — <span class="code">grad-fire · text-fire</span></td></tr>
+          <tr><td class="text-cream">Neutro</td><td><span class="code">charcoal · surface · surface2 · cream · creamDim · muted</span></td><td><span class="code">bg-charcoal · text-cream/70</span></td><td>Fundos, superfícies, texto e bordas (cream em 5–20 % de opacidade)</td><td>Só em véus/vinhetas</td></tr>
+          <tr><td class="text-cream">Feedback</td><td><span class="code">ok · warn · danger · info</span></td><td><span class="code">text-ok · border-danger</span></td><td>Validação, alertas, toasts, badges de status</td><td>Não</td></tr>
+          <tr><td class="text-cream">Decorativo</td><td><span class="code">wine · goldDeep · basil</span></td><td><span class="code">bg-wine · text-basil</span></td><td>Manchas de fundo (aurora), faixa marquee, folha de manjericão</td><td>Sim — aurora e faixa</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="t-h6 text-brasa mb-6 reveal-up">3.5 · Regras de uso contextual</h3>
+    <div class="spot-card overflow-x-auto mb-24 reveal-up">
+      <table class="spec-table min-w-[900px]">
+        <thead><tr><th>Contexto</th><th>Fundo escuro (padrão)</th><th>Sobre vermelho</th><th>Sobre creme (light-card)</th><th>Demonstração</th></tr></thead>
+        <tbody>
+          <tr><td class="text-cream">Texto</td><td><span class="code">cream</span> títulos · <span class="code">cream/75</span> corpo · <span class="code">muted</span> apoio</td><td><span class="code">#fff</span></td><td><span class="code">#1A0D0F</span></td><td><span class="text-cream">Aa</span> <span class="text-cream/75">Aa</span> <span class="text-muted">Aa</span></td></tr>
+          <tr><td class="text-cream">Fundo</td><td><span class="code">charcoal</span> base · <span class="code">surface</span> seção alternada · <span class="code">surface2</span> elevado</td><td><span class="code">ember → grad-fire</span></td><td><span class="code">#FBF5EC</span></td><td><span class="inline-flex gap-1"><i class="w-5 h-5 rounded bg-charcoal border border-white/20"></i><i class="w-5 h-5 rounded bg-surface border border-white/20"></i><i class="w-5 h-5 rounded bg-surface2 border border-white/20"></i></span></td></tr>
+          <tr><td class="text-cream">Borda</td><td><span class="code">cream/10</span> neutra · <span class="code">ember/20–40</span> destaque</td><td><span class="code">white/25</span></td><td><span class="code">#E6D9CC</span></td><td><span class="inline-block px-3 py-1 rounded-full border border-cream/10">10</span> <span class="inline-block px-3 py-1 rounded-full border border-ember/40">40</span></td></tr>
+          <tr><td class="text-cream">Hover</td><td>ember → <span class="code">brasa</span>; borda ember/20 → /50; card sobe <span class="code">-translate-y-1</span></td><td>preenche <span class="code">#FF5A3D</span> + glow</td><td>ember 5 % de tinta</td><td><a class="text-cream/80 hover:text-brasa transition-colors cursor-pointer">hover</a></td></tr>
+          <tr><td class="text-cream">Active / pressed</td><td><span class="code">fuoco-700 #9F1224</span> + <span class="code">scale(.96)</span></td><td><span class="code">#9F1224</span></td><td><span class="code">fuoco-600</span></td><td><button class="btn btn-fire btn-sm">clique</button></td></tr>
+          <tr><td class="text-cream">Foco</td><td>anel <span class="code">brasa 2px</span> + halo <span class="code">ember/16</span></td><td>anel branco</td><td>anel ember</td><td><input class="field !w-28 !py-1.5" placeholder="foco"/></td></tr>
+          <tr><td class="text-cream">Disabled</td><td><span class="code">opacity .38 + saturate .3</span>, sem glow, borda tracejada</td><td>idem</td><td>idem</td><td><button class="btn btn-fire btn-sm" disabled>off</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 class="t-h6 text-brasa mb-6 reveal-up">3.6 · Matriz de contraste (WCAG 2.2)</h3>
+    <div id="contrast-matrix" class="grid sm:grid-cols-2 xl:grid-cols-4 gap-4"></div>
+    <p class="t-helper text-muted mt-6">AA texto normal ≥ 4.5 · AA texto grande (≥ 24 px ou 19 px bold) ≥ 3 · AAA ≥ 7. Razões calculadas em tempo real a partir dos hex.</p>
+  </div>
+</section>
+<div class="section-line"></div>
+
+<!-- =================================================================
+     4) COMPONENTES UI
+     ================================================================= -->
+<section id="componentes" class="relative py-24 lg:py-36 overflow-hidden bg-charcoal">
+  <div class="ds-bg" data-bg="aurora"></div>
+  <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12">
+    <div class="text-center space-y-4 mb-12 reveal-up">
+      <div class="flex items-center justify-center gap-3"><div class="w-8 h-[1px] bg-ember"></div><span class="t-label text-brasa">04 · Componentes UI</span><div class="w-8 h-[1px] bg-ember"></div></div>
+      <h2 class="t-h1">Peças que <em class="font-editorial text-fire pr-1">acendem</em><br class="hidden md:block"/> ao toque</h2>
+      <p class="t-body text-creamDim max-w-2xl mx-auto">Cada componente traz spec completa (medidas, tipografia, estados, animação) e as classes reais das referências. Passe o mouse, clique e teste.</p>
+    </div>
+    <div class="flex flex-wrap justify-center gap-2 mb-20 reveal-up" id="comp-chips">
+      <a href="#c-buttons" class="badge badge-ghost hover:!border-ember hover:!text-brasa transition-colors">Buttons</a>
+      <a href="#c-inputs" class="badge badge-ghost hover:!border-ember hover:!text-brasa transition-colors">Inputs</a>
+      <a href="#c-cards" class="badge badge-ghost hover:!border-ember hover:!text-brasa transition-colors">Cards</a>
+      <a href="#c-navbars" class="badge badge-ghost hover:!border-ember hover:!text-brasa transition-colors">Navbars</a>
+      <a href="#c-sections" class="badge badge-ghost hover:!border-ember hover:!text-brasa transition-colors">Sections</a>
+      <a href="#c-modals" class="badge badge-ghost hover:!border-ember hover:!text-brasa transition-colors">Modals</a>
+      <a href="#c-badges" class="badge badge-ghost hover:!border-ember hover:!text-brasa transition-colors">Badges</a>
+      <a href="#c-tooltips" class="badge badge-ghost hover:!border-ember hover:!text-brasa transition-colors">Tooltips</a>
+    </div>
+
+    <!-- ============ BUTTONS ============ -->
+    <div id="c-buttons" class="scroll-mt-28 mb-28">
+      <div class="flex items-end justify-between mb-8 reveal-up"><h3 class="t-h3">4.1 <span class="italic text-brasa font-editorial">Buttons</span></h3><span class="t-helper text-muted hidden sm:block">Ripple · shine · magnetic · glow-pulse · fill</span></div>
+      <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6 mb-10">
+        <div class="spot-card p-8 reveal-up">
+          <span class="badge badge-solid mb-6">Primário</span>
+          <div class="flex flex-wrap items-center gap-4 min-h-[110px]">
+            <button data-ripple data-magnetic class="btn btn-fire btn-md">Pedir agora <span class="arrow-dot"><iconify-icon icon="solar:arrow-right-up-linear"></iconify-icon></span></button>
+          </div>
+          <p class="t-body-sm text-muted mt-6">Vermelho sólido; no hover escurece e a seta circular gira 45° (ref.webp). Brilho e pulso são opt-in: <span class="code">.fx-shine</span> <span class="code">.fx-glow</span>.</p>
+          <p class="mt-3"><span class="code">.btn .btn-fire .btn-md</span> <span class="code">.arrow-dot</span></p>
+        </div>
+        <div class="spot-card p-8 reveal-up">
+          <span class="badge badge-ghost mb-6">Contornado ouro · Nereo</span>
+          <div class="flex flex-wrap items-center gap-4 min-h-[110px]">
+            <button data-ripple class="btn btn-gold btn-md"><iconify-icon icon="solar:calendar-linear" class="text-base"></iconify-icon>Reservar mesa</button>
+          </div>
+          <p class="t-body-sm text-muted mt-6">Quadrado, caixa-alta, tracking .2em. O ouro sobe do rodapé preenchendo o botão (<span class="code">scaleY</span> luxe).</p>
+          <p class="mt-3"><span class="code">.btn .btn-gold</span></p>
+        </div>
+        <div class="spot-card p-8 reveal-up">
+          <span class="badge badge-ghost mb-6">Vidro · secundário</span>
+          <div class="flex flex-wrap items-center gap-4 min-h-[110px]">
+            <button data-ripple class="btn btn-glass btn-md">Ver cardápio</button>
+            <button data-ripple class="btn btn-cream btn-sm">Reservar</button>
+          </div>
+          <p class="t-body-sm text-muted mt-6">Borda cream/30 com backdrop-blur; inverte para creme sólido no hover (Balkan). Variante creme = CTA da La Dolce Vita.</p>
+          <p class="mt-3"><span class="code">.btn-glass</span> <span class="code">.btn-cream</span></p>
+        </div>
+        <div class="spot-card p-8 reveal-up">
+          <span class="badge badge-ghost mb-6">Link com seta</span>
+          <div class="flex flex-wrap items-center gap-6 min-h-[110px]">
+            <a class="btn btn-link cursor-pointer">Todos os sabores <iconify-icon icon="solar:arrow-right-up-linear"></iconify-icon></a>
+          </div>
+          <p class="t-body-sm text-muted mt-6">Sublinhado que desenha da esquerda; seta desliza na diagonal (La Dolce Vita "Alle Gerichte").</p>
+          <p class="mt-3"><span class="code">.btn-link</span></p>
+        </div>
+        <div class="spot-card p-8 reveal-up">
+          <span class="badge badge-ghost mb-6">Ícone circular</span>
+          <div class="flex flex-wrap items-center gap-4 min-h-[110px]">
+            <button class="btn btn-icon" aria-label="Favoritar"><iconify-icon icon="solar:heart-linear"></iconify-icon></button>
+            <button class="btn btn-icon" aria-label="Carrinho"><iconify-icon icon="solar:cart-large-linear"></iconify-icon></button>
+            <button class="btn btn-icon" aria-label="Compartilhar"><iconify-icon icon="solar:share-linear"></iconify-icon></button>
+          </div>
+          <p class="t-body-sm text-muted mt-6">48 px, levanta e gira -8° ao passar o mouse, preenchendo de vermelho com glow.</p>
+          <p class="mt-3"><span class="code">.btn-icon</span></p>
+        </div>
+        <div class="spot-card p-8 reveal-up">
+          <span class="badge badge-ghost mb-6">Estados</span>
+          <div class="flex flex-wrap items-center gap-4 min-h-[110px]">
+            <button class="btn btn-fire btn-sm" id="btn-load"><span class="btn-label">Enviar pedido</span></button>
+            <button class="btn btn-fire btn-sm" disabled>Desabilitado</button>
+            <button class="btn btn-glass btn-sm is-disabled">Indisponível</button>
+          </div>
+          <p class="t-body-sm text-muted mt-6">Clique em "Enviar pedido" para ver o loading. Disabled: opacity .38, saturate .3, sem eventos.</p>
+          <p class="mt-3"><span class="code">.is-loading</span> <span class="code">[disabled]</span></p>
+        </div>
+      </div>
+      <div class="spot-card p-8 mb-8 reveal-up">
+        <div class="t-h6 text-brasa mb-5">Tamanhos</div>
+        <div class="flex flex-wrap items-end gap-4">
+          <button class="btn btn-fire btn-sm">Small</button><button class="btn btn-fire btn-md">Medium</button><button class="btn btn-fire btn-lg">Large <span class="arrow-dot"><iconify-icon icon="solar:arrow-right-up-linear"></iconify-icon></span></button>
+          <button class="btn btn-gold btn-sm">Small</button><button class="btn btn-gold btn-md">Medium</button><button class="btn btn-gold btn-lg">Large</button>
+        </div>
+      </div>
+      <div class="spot-card overflow-x-auto reveal-up">
+        <table class="spec-table min-w-[1100px]">
+          <thead><tr><th>Variante</th><th>Padding / altura</th><th>Raio</th><th>Tipografia</th><th>Default</th><th>Hover</th><th>Active</th><th>Focus</th><th>Disabled</th><th>Animação</th></tr></thead>
+          <tbody>
+            <tr><td class="text-cream">Fire</td><td>sm 10×20 · md 15×30 · lg 18×38 (≈ 44/52/60 px)</td><td>9999</td><td>Inter 600 · 14 px</td><td>ember sólido</td><td>fuoco-600 #C2182B</td><td>#9F1224 · scale .96</td><td>anel brasa 2 px</td><td>.38 / sat .3</td><td>cor .3 s · seta 45° (opt-in: fx-glow, fx-shine)</td></tr>
+            <tr><td class="text-cream">Gold</td><td>md 15×30</td><td>0</td><td>Inter 600 · 11 px · +.2em · UPPER</td><td>borda gold/60</td><td>fill sobe · texto charcoal</td><td>scale .96</td><td>anel brasa</td><td>.38</td><td>scaleY .5 s luxe</td></tr>
+            <tr><td class="text-cream">Glass</td><td>md 15×30</td><td>9999</td><td>Inter 600 · 14 px</td><td>white/5 + blur</td><td>fundo cream, texto charcoal</td><td>scale .96</td><td>anel brasa</td><td>.38</td><td>cor .3 s</td></tr>
+            <tr><td class="text-cream">Link</td><td>4×0</td><td>—</td><td>Inter 500 · 14 px</td><td>brasa</td><td>goldSoft + sublinhado</td><td>scale .96</td><td>anel brasa</td><td>.38</td><td>underline .5 s · seta diagonal</td></tr>
+            <tr><td class="text-cream">Icon</td><td>48×48</td><td>9999</td><td>ícone 20 px</td><td>white/4 + borda cream/18</td><td>bg ember + rot -8°</td><td>scale .96</td><td>anel brasa</td><td>.38</td><td>luxe .35 s</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ============ INPUTS ============ -->
+    <div id="c-inputs" class="scroll-mt-28 mb-28">
+      <div class="flex items-end justify-between mb-8 reveal-up"><h3 class="t-h3">4.2 <span class="italic text-brasa font-editorial">Inputs</span></h3><span class="t-helper text-muted hidden sm:block">Focus glow · floating label · toggles</span></div>
+      <div class="grid lg:grid-cols-2 gap-6 mb-6">
+        <div class="spot-card p-8 space-y-5 reveal-up">
+          <div class="t-h6 text-brasa">Campos de texto</div>
+          <div class="float-wrap"><input class="field" id="i1" placeholder=" " /><label for="i1">Seu nome</label></div>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div class="float-wrap"><input class="field" type="email" id="i2" placeholder=" "/><label for="i2">E-mail</label></div>
+            <div class="relative"><iconify-icon icon="solar:magnifer-linear" class="absolute left-4 top-1/2 -translate-y-1/2 text-muted"></iconify-icon><input class="field !pl-11" placeholder="Buscar sabor…"/></div>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <select class="field"><option>Quantas pessoas?</option><option>2 pessoas</option><option>4 pessoas</option><option>6+ pessoas</option></select>
+            <input class="field" type="date" />
+          </div>
+          <textarea class="field" rows="3" placeholder="Observações para a cozinha (sem cebola, borda recheada…)"></textarea>
+          <div class="grid sm:grid-cols-3 gap-4">
+            <div><input class="field is-ok" value="Margherita"/><p class="t-helper text-ok mt-1.5 flex items-center gap-1"><iconify-icon icon="solar:check-circle-linear"></iconify-icon>Disponível</p></div>
+            <div><input class="field is-error" value="cep inválido"/><p class="t-helper text-danger mt-1.5 flex items-center gap-1"><iconify-icon icon="solar:danger-triangle-linear"></iconify-icon>Verifique o CEP</p></div>
+            <div><input class="field" disabled placeholder="Desabilitado"/><p class="t-helper text-muted mt-1.5">Indisponível</p></div>
+          </div>
+          <div><input class="field field-line" placeholder="Variante linha (Nereo) — só borda inferior ouro"/></div>
+        </div>
+        <div class="space-y-6">
+          <div class="spot-card p-8 space-y-6 reveal-up">
+            <div class="t-h6 text-brasa">Controles</div>
+            <div class="flex flex-wrap items-center gap-x-8 gap-y-4">
+              <label class="flex items-center gap-3 cursor-pointer text-sm"><input type="checkbox" class="chk" checked/>Borda recheada</label>
+              <label class="flex items-center gap-3 cursor-pointer text-sm"><input type="checkbox" class="chk"/>Sem glúten</label>
+              <label class="flex items-center gap-3 cursor-pointer text-sm"><input type="radio" name="r" class="chk round" checked/>Retirar</label>
+              <label class="flex items-center gap-3 cursor-pointer text-sm"><input type="radio" name="r" class="chk round"/>Entrega</label>
+            </div>
+            <div class="flex flex-wrap items-center gap-x-10 gap-y-4">
+              <div class="flex items-center gap-3 text-sm"><button class="switch" role="switch" aria-checked="true" aria-label="Notificações"></button>Notificações</div>
+              <div class="flex items-center gap-3 text-sm"><button class="switch" role="switch" aria-checked="false" aria-label="Modo lenha"></button>Modo lenha</div>
+              <div class="stepper flex items-center gap-3 text-sm"><button aria-label="menos">−</button><span class="w-6 text-center font-serif text-lg" id="qty">2</span><button aria-label="mais">+</button></div>
+            </div>
+            <div><div class="flex justify-between t-helper text-muted mb-3"><span>Temperatura do forno</span><span id="range-val" class="text-brasa">450°C</span></div><input type="range" class="range" min="300" max="500" value="450" id="range"/></div>
+          </div>
+          <!-- formulário claro (ref.webp: "Reserve Your Table") -->
+          <div class="light-card p-7 reveal-up" id="res-card">
+            <h4 class="font-serif text-2xl mb-1 text-[#1a0d0f]">Reserve sua mesa</h4>
+            <p class="text-xs text-[#7a6a63] mb-5">Variante clara (.light-card) — contraste sobre fundos escuros.</p>
+            <form id="res-form" class="space-y-3">
+              <select class="field"><option>Escolha a unidade</option><option>Vila Madalena</option><option>Jardins</option></select>
+              <div class="grid grid-cols-2 gap-3"><input class="field" type="date" style="color-scheme:light"/><input class="field" type="time" style="color-scheme:light"/></div>
+              <button type="submit" data-ripple class="btn btn-fire btn-md w-full !rounded-xl uppercase tracking-widest !text-xs">Confirmar reserva</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="spot-card overflow-x-auto reveal-up">
+        <table class="spec-table min-w-[900px]">
+          <thead><tr><th>Estado</th><th>Fundo</th><th>Borda</th><th>Sombra / glow</th><th>Texto</th><th>Placeholder</th><th>Transição</th></tr></thead>
+          <tbody>
+            <tr><td class="text-cream">Default</td><td>white/3.5 %</td><td>cream/14 · 1 px · raio 13.6 px</td><td>—</td><td>Inter 300 · 14.4 px · cream</td><td>cream/32</td><td>.3 s color · .4 s shadow</td></tr>
+            <tr><td class="text-cream">Hover</td><td>igual</td><td>cream/30</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td class="text-cream">Focus</td><td>ember/6 %</td><td>ember</td><td>0 0 0 4px ember/16 + glow 30 px</td><td>—</td><td>label sobe (scale .74, brasa)</td><td>label .35 s luxe</td></tr>
+            <tr><td class="text-cream">Error / OK</td><td>igual</td><td>danger / ok</td><td>0 0 0 4px 12 %</td><td>helper com ícone</td><td>—</td><td>—</td></tr>
+            <tr><td class="text-cream">Disabled</td><td>transparente</td><td>tracejada</td><td>—</td><td>opacity .4</td><td>—</td><td>cursor not-allowed</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ============ CARDS ============ -->
+    <div id="c-cards" class="scroll-mt-28 mb-10">
+      <div class="flex items-end justify-between mb-8 reveal-up"><h3 class="t-h3">4.3 <span class="italic text-brasa font-editorial">Cards</span></h3><span class="t-helper text-muted hidden sm:block">Spotlight · tilt 3D · zoom · glass</span></div>
+
+      <div class="t-h6 text-brasa mb-4 reveal-up">Card de produto — ref.webp</div>
+      <div class="grid md:grid-cols-3 gap-6 mb-14">
+        <article class="spot-card tilt p-5 reveal-up">
+          <div class="plate w-[78%] mx-auto aspect-square -mt-1 mb-4"><img class="w-full h-full object-cover transition-transform duration-[1200ms] hover:scale-110" alt="Margherita" src="templates/italian-restaurant-2.aura.build/assets/122646786d43ef3e_photo-1565299624946-b28f40a0ae.avif"/></div>
+          <div class="flex items-center justify-between"><div><h4 class="font-serif text-xl">Margherita Brasa</h4><div class="t-price text-gold mt-2">R$ 54</div></div><button class="btn btn-icon !w-10 !h-10 !text-base" aria-label="favoritar"><iconify-icon icon="solar:heart-linear"></iconify-icon></button></div>
+          <div class="flex items-center justify-between mt-5"><button data-ripple class="btn btn-fire btn-sm !pr-4">Pedir <span class="arrow-dot"><iconify-icon icon="solar:arrow-right-up-linear"></iconify-icon></span></button><span class="flex items-center gap-1 text-gold text-sm"><iconify-icon icon="solar:star-bold"></iconify-icon>5.0</span></div>
+        </article>
+        <article class="spot-card tilt p-5 reveal-up">
+          <div class="plate w-[78%] mx-auto aspect-square -mt-1 mb-4"><img class="w-full h-full object-cover transition-transform duration-[1200ms] hover:scale-110" alt="Penne" src="templates/italian-restaurant-2.aura.build/assets/80a394130c1ac232_photo-1621996346565-e3dbc646d9.avif"/></div>
+          <div class="flex items-center justify-between"><div><h4 class="font-serif text-xl">Penne ao Sugo</h4><div class="t-price text-gold mt-2">R$ 46</div></div><button class="btn btn-icon !w-10 !h-10 !text-base" aria-label="favoritar"><iconify-icon icon="solar:heart-linear"></iconify-icon></button></div>
+          <div class="flex items-center justify-between mt-5"><button data-ripple class="btn btn-fire btn-sm !pr-4">Pedir <span class="arrow-dot"><iconify-icon icon="solar:arrow-right-up-linear"></iconify-icon></span></button><span class="flex items-center gap-1 text-gold text-sm"><iconify-icon icon="solar:star-bold"></iconify-icon>4.9</span></div>
+        </article>
+        <article class="spot-card tilt p-5 reveal-up">
+          <div class="plate w-[78%] mx-auto aspect-square -mt-1 mb-4"><img class="w-full h-full object-cover transition-transform duration-[1200ms] hover:scale-110" alt="Tagliatelle" src="templates/italian-restaurant-2.aura.build/assets/64fc86b03033e60e_photo-1551183053-bf91a1d81141.avif"/></div>
+          <div class="flex items-center justify-between"><div><h4 class="font-serif text-xl">Tagliatelle Tartufo</h4><div class="t-price text-gold mt-2">R$ 68</div></div><button class="btn btn-icon !w-10 !h-10 !text-base" aria-label="favoritar"><iconify-icon icon="solar:heart-linear"></iconify-icon></button></div>
+          <div class="flex items-center justify-between mt-5"><button data-ripple class="btn btn-fire btn-sm !pr-4">Pedir <span class="arrow-dot"><iconify-icon icon="solar:arrow-right-up-linear"></iconify-icon></span></button><span class="flex items-center gap-1 text-gold text-sm"><iconify-icon icon="solar:star-bold"></iconify-icon>4.9</span></div>
+        </article>
+      </div>
+
+      <div class="t-h6 text-brasa mb-4 reveal-up">Bento com zoom — La Dolce Vita</div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[340px] mb-14">
+        <div class="group relative md:col-span-2 rounded-3xl overflow-hidden bg-surface border border-white/5 img-zoom-container reveal-up">
+          <img alt="" class="absolute inset-0 w-full h-full object-cover opacity-70" src="templates/italian-restaurant-2.aura.build/assets/64fc86b03033e60e_photo-1551183053-bf91a1d81141.avif"/>
+          <div class="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/25 to-transparent"></div>
+          <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700" style="background:radial-gradient(circle at 20% 100%,rgba(224,40,58,.35),transparent 60%)"></div>
+          <div class="absolute bottom-0 left-0 p-8 w-full flex justify-between items-end">
+            <div><span class="t-eyebrow text-brasa block mb-2">Fatto a mano</span><h4 class="font-serif text-3xl text-white mb-2">Tagliatelle al Tartufo</h4><p class="text-creamDim text-sm font-light max-w-sm">Trufa negra, creme de parmesão, emulsão de manteiga e cebolinha.</p></div>
+            <span class="t-price text-cream !text-3xl">68</span>
+          </div>
+        </div>
+        <div class="group relative rounded-3xl overflow-hidden bg-surface border border-white/5 img-zoom-container reveal-up">
+          <img alt="" class="absolute inset-0 w-full h-full object-cover opacity-70" src="templates/italian-restaurant-2.aura.build/assets/b020e4a8b4485856_photo-1551024709-8f23befc6f87.avif"/>
+          <div class="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/25 to-transparent"></div>
+          <div class="absolute bottom-0 left-0 p-8 w-full"><span class="t-eyebrow text-brasa block mb-2">Bar da casa</span><h4 class="font-serif text-3xl text-white mb-4">Drinks de fogo</h4><div class="flex justify-between items-center border-t border-white/10 pt-4"><span class="text-creamDim text-xs">Negroni defumado</span><span class="t-price text-cream !text-xl">32</span></div></div>
+        </div>
+      </div>
+
+      <div class="t-h6 text-brasa mb-4 reveal-up">Cardápio em abas — Balkan (JS: .menu-tab / .menu-item)</div>
+      <div class="spot-card p-6 md:p-10 mb-14 reveal-up">
+        <div class="flex overflow-x-auto hide-scrollbar gap-2 mb-8 md:justify-center border-b border-cream/10 pb-4" id="menu-tabs">
+          <button class="menu-tab active" data-target="pizza">Pizzas</button>
+          <button class="menu-tab" data-target="massa">Massas</button>
+          <button class="menu-tab" data-target="bebida">Bebidas</button>
+          <button class="menu-tab" data-target="doce">Sobremesas</button>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="menu-grid"></div>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-6 mb-14">
+        <div class="lg:col-span-2 glass-card rounded-[32px] p-8 min-h-[320px] flex flex-col justify-between relative overflow-hidden group reveal-up">
+          <div class="absolute inset-0 bg-cover bg-center brightness-[.25] group-hover:scale-105 transition-transform duration-1000" style="background-image:url('templates/balkan-cuisine-80.aura.build/assets/970d7928f8092b91_photo-1517248135467-4c7edcad34.avif')"></div>
+          <div class="absolute inset-0" style="background:linear-gradient(120deg,rgba(122,15,28,.55),transparent 60%)"></div>
+          <div class="relative z-10"><span class="t-eyebrow text-brasa">Glass card · Nereo</span><h4 class="font-serif text-3xl mt-2 uppercase">Mesa do Pizzaiolo</h4></div>
+          <div class="relative z-10 md:max-w-md"><p class="text-sm text-creamDim font-light leading-relaxed">Degustação de 8 tempos ao redor do forno. Vidro fosco, borda vermelha translúcida, sombra profunda e glow no hover.</p><a class="btn-link btn mt-4 !text-[11px] uppercase tracking-wider cursor-pointer">Solicitar convite <iconify-icon icon="solar:arrow-right-linear"></iconify-icon></a></div>
+        </div>
+        <div class="glass-card rounded-[32px] p-8 flex flex-col justify-between reveal-up">
+          <div class="w-12 h-12 rounded-full border border-ember/40 flex items-center justify-center bg-ember/10"><i data-lucide="wine" class="text-brasa w-5 h-5"></i></div>
+          <div><div class="font-serif text-6xl text-fire" data-count="120">0</div><p class="t-label text-creamDim mt-3">rótulos na adega</p></div>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6 mb-14">
+        <article class="spot-card p-6 text-center reveal-up">
+          <div class="w-full aspect-[4/5] rounded-2xl overflow-hidden mb-5 img-zoom-container relative"><img class="w-full h-full object-cover" alt="Chef" src="templates/italian-restaurant-2.aura.build/assets/b80466549f7f6f41_photo-1583394293214-28ded15ee5.avif"/><div class="absolute inset-0 bg-gradient-to-t from-charcoal/70 to-transparent"></div></div>
+          <h4 class="font-serif text-xl">Takeshi Ito</h4><p class="t-label text-brasa mt-2">Mestre pizzaiolo</p>
+        </article>
+        <article class="spot-card p-7 reveal-up md:col-span-2 flex flex-col justify-between" id="testi">
+          <div class="flex items-center gap-3 text-gold mb-4"><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon></div>
+          <div class="relative min-h-[130px]">
+            <blockquote class="testi-slide absolute inset-0 transition-opacity duration-700 opacity-100"><p class="font-editorial italic text-3xl leading-tight">“A borda estufada, o cheiro de lenha… é a melhor pizza que já comi na vida.”</p><footer class="mt-5 flex items-center gap-3"><span class="w-10 h-10 rounded-full bg-gradient-to-br from-ember to-brasa flex items-center justify-center font-serif">S</span><span><span class="block text-sm text-cream">Sofia M.</span><span class="block text-[11px] text-muted">Crítica gastronômica</span></span></footer></blockquote>
+            <blockquote class="testi-slide absolute inset-0 transition-opacity duration-700 opacity-0"><p class="font-editorial italic text-3xl leading-tight">“Cada detalhe é pensado: massa leve, tomate doce e atendimento impecável.”</p><footer class="mt-5 flex items-center gap-3"><span class="w-10 h-10 rounded-full bg-gradient-to-br from-gold to-wine flex items-center justify-center font-serif">D</span><span><span class="block text-sm text-cream">Daniel L.</span><span class="block text-[11px] text-muted">Entusiasta</span></span></footer></blockquote>
+            <blockquote class="testi-slide absolute inset-0 transition-opacity duration-700 opacity-0"><p class="font-editorial italic text-3xl leading-tight">“Fui pela pizza, voltei pelo tiramisù. Já é meu lugar de sábado.”</p><footer class="mt-5 flex items-center gap-3"><span class="w-10 h-10 rounded-full bg-gradient-to-br from-wine to-ember flex items-center justify-center font-serif">A</span><span><span class="block text-sm text-cream">Ava R.</span><span class="block text-[11px] text-muted">Blogueira</span></span></footer></blockquote>
+          </div>
+        </article>
+      </div>
+
+      <div class="flex items-end justify-between mb-5 reveal-up"><div class="t-h6 text-brasa">Rolagem horizontal — Kampai (.menu-scroll-container)</div><div class="hidden md:flex gap-2 text-muted"><iconify-icon icon="solar:arrow-left-linear" width="22"></iconify-icon><iconify-icon icon="solar:arrow-right-linear" width="22"></iconify-icon></div></div>
+    </div>
+  </div>
+  <div class="menu-scroll-container pb-10 relative z-10 reveal-up" data-lenis-prevent-wheel>
+    <div class="flex-none w-[300px] md:w-[380px] group cursor-pointer"><div class="aspect-[4/3] bg-surface2 overflow-hidden mb-5 relative rounded-2xl img-zoom-container"><img class="w-full h-full object-cover opacity-80 group-hover:opacity-100" src="templates/italian-restaurant-2.aura.build/assets/122646786d43ef3e_photo-1565299624946-b28f40a0ae.avif" alt=""/><span class="badge badge-gold absolute top-4 right-4">54</span></div><h4 class="font-serif text-xl mb-2 group-hover:text-brasa transition-colors">Margherita Brasa</h4><ul class="text-sm text-cream/50 space-y-1"><li>Fior di latte · San Marzano</li><li>Manjericão fresco · azeite</li></ul></div>
+    <div class="flex-none w-[300px] md:w-[380px] group cursor-pointer"><div class="aspect-[4/3] bg-surface2 overflow-hidden mb-5 relative rounded-2xl img-zoom-container"><img class="w-full h-full object-cover opacity-80 group-hover:opacity-100" src="templates/balkan-cuisine-80.aura.build/assets/2fbd4d8ead28722c_photo-1504674900247-0877df9cc8.avif" alt=""/><span class="badge badge-gold absolute top-4 right-4">72</span></div><h4 class="font-serif text-xl mb-2 group-hover:text-brasa transition-colors">Tábua da Casa</h4><ul class="text-sm text-cream/50 space-y-1"><li>Carnes curadas · queijos</li><li>Pães de fermentação natural</li></ul></div>
+    <div class="flex-none w-[300px] md:w-[380px] group cursor-pointer"><div class="aspect-[4/3] bg-surface2 overflow-hidden mb-5 relative rounded-2xl img-zoom-container"><img class="w-full h-full object-cover opacity-80 group-hover:opacity-100" src="templates/italian-restaurant-2.aura.build/assets/aa688705bd6ecbfb_photo-1510812431401-41d2bd2722.avif" alt=""/><span class="badge badge-gold absolute top-4 right-4">38</span></div><h4 class="font-serif text-xl mb-2 group-hover:text-brasa transition-colors">Taça Chianti</h4><ul class="text-sm text-cream/50 space-y-1"><li>Sangiovese · Toscana</li><li>Harmoniza com pizzas de carne</li></ul></div>
+    <div class="flex-none w-[300px] md:w-[380px] group cursor-pointer"><div class="aspect-[4/3] bg-surface2 overflow-hidden mb-5 relative rounded-2xl img-zoom-container"><img class="w-full h-full object-cover opacity-80 group-hover:opacity-100" src="templates/italian-restaurant-2.aura.build/assets/b020e4a8b4485856_photo-1551024709-8f23befc6f87.avif" alt=""/><span class="badge badge-gold absolute top-4 right-4">32</span></div><h4 class="font-serif text-xl mb-2 group-hover:text-brasa transition-colors">Trio de Drinks</h4><ul class="text-sm text-cream/50 space-y-1"><li>Negroni defumado</li><li>Spritz de laranja-sanguínea</li></ul></div>
+  </div>
+  <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 mt-6">
+    <div class="spot-card overflow-x-auto reveal-up">
+      <table class="spec-table min-w-[900px]">
+        <thead><tr><th>Card</th><th>Fundo</th><th>Borda</th><th>Raio</th><th>Padding</th><th>Hover</th><th>Animação</th></tr></thead>
+        <tbody>
+          <tr><td class="text-cream">Produto (.spot-card)</td><td>surface</td><td>cream/8</td><td>24</td><td>20</td><td>borda de luz segue o cursor + spotlight + tilt 3D</td><td>tilt ±6° · spotlight radial</td></tr>
+          <tr><td class="text-cream">Bento imagem</td><td>surface + foto 70 %</td><td>white/5</td><td>24</td><td>32</td><td>foto scale 1.06 (1.2 s luxe) + brilho vermelho</td><td>.img-zoom-container</td></tr>
+          <tr><td class="text-cream">Glass (.glass-card)</td><td>gradiente translúcido + blur 20</td><td>ember/28</td><td>20–32</td><td>32</td><td>borda → brasa/55 + glow 60 px</td><td>.5 s luxe</td></tr>
+          <tr><td class="text-cream">Item de menu</td><td>charcoal</td><td>ember/20</td><td>16</td><td>24</td><td>-translate-y-1 · borda ember/50</td><td>itemIn .6 s</td></tr>
+          <tr><td class="text-cream">Depoimento</td><td>surface</td><td>cream/8</td><td>24</td><td>28</td><td>—</td><td>cross-fade 4 s</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+<div class="section-line"></div>
+
+<section id="componentes-2" class="relative py-24 lg:py-32 overflow-hidden bg-surface">
+  <div class="ds-bg" data-bg="dots"></div>
+  <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12">
+
+    <!-- ============ NAVBARS ============ -->
+    <div id="c-navbars" class="scroll-mt-28 mb-28">
+      <div class="flex items-end justify-between mb-8 reveal-up"><h3 class="t-h3">4.4 <span class="italic text-brasa font-editorial">Navbars</span></h3><span class="t-helper text-muted hidden sm:block">Sticky · glass · underline · drawer</span></div>
+      <div class="grid lg:grid-cols-2 gap-6 mb-6">
+        <!-- A: sticky transparente → sólida (Balkan) -->
+        <div class="spot-card p-5 reveal-up">
+          <div class="flex flex-wrap gap-3 items-center justify-between mb-4"><span class="badge badge-solid">A · Sticky Balkan</span>
+            <label class="flex items-center gap-3 text-xs text-creamDim">Simular scroll <button class="switch" role="switch" aria-checked="false" id="nav-sim" aria-label="Simular scroll"></button></label></div>
+          <div class="relative h-[230px] rounded-2xl overflow-hidden border border-white/10">
+            <img alt="" class="absolute inset-0 w-full h-full object-cover opacity-50" src="templates/balkan-cuisine-80.aura.build/assets/9cdc9291dda928eb_photo-1525610553991-2bede1a236.avif"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-charcoal via-transparent"></div>
+            <nav id="nav-demo-a" class="absolute top-0 inset-x-0 h-16 px-5 flex items-center justify-between transition-all duration-300 border-b bg-gradient-to-b from-charcoal/80 to-transparent border-transparent">
+              <span class="flex items-center gap-2"><iconify-icon class="text-brasa text-xl" icon="solar:fire-linear"></iconify-icon><span class="font-serif text-lg tracking-tight">Brasa</span></span>
+              <span class="hidden sm:flex gap-5 text-[13px] text-cream/80"><a class="hover:text-brasa transition-colors cursor-pointer">Cardápio</a><a class="hover:text-brasa transition-colors cursor-pointer">Casa</a><a class="hover:text-brasa transition-colors cursor-pointer">Contato</a></span>
+              <a class="btn btn-fire btn-sm !px-4 !py-2">Reservar</a>
+            </nav>
+          </div>
+        </div>
+        <!-- B: editorial glass (Kampai / Nereo) -->
+        <div class="spot-card p-5 reveal-up">
+          <div class="mb-4"><span class="badge badge-ghost">B · Editorial glass — Kampai / Nereo</span></div>
+          <div class="relative h-[230px] rounded-2xl overflow-hidden border border-white/10">
+            <img alt="" class="absolute inset-0 w-full h-full object-cover opacity-40" src="templates/balkan-cuisine-80.aura.build/assets/970d7928f8092b91_photo-1517248135467-4c7edcad34.avif"/>
+            <nav class="nav-glass absolute top-0 inset-x-0 h-16 px-5 flex items-center justify-between">
+              <span class="flex items-center gap-2"><span class="font-serif text-lg text-ember">B</span><span class="flex flex-col leading-none"><span class="font-serif uppercase text-xs tracking-[.2em]">Brasa</span><span class="text-[8px] uppercase tracking-[.3em] text-white/40">São Paulo</span></span></span>
+              <span class="hidden sm:flex gap-6">
+                <a class="text-[10px] uppercase tracking-[.2em] text-white/60 hover:text-brasa transition-colors relative after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-px after:bg-brasa hover:after:w-full after:transition-all after:duration-300 cursor-pointer">Filosofia</a>
+                <a class="text-[10px] uppercase tracking-[.2em] text-white/60 hover:text-brasa transition-colors relative after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-px after:bg-brasa hover:after:w-full after:transition-all after:duration-300 cursor-pointer">Karte</a>
+                <a class="text-[10px] uppercase tracking-[.2em] text-white/60 hover:text-brasa transition-colors relative after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-px after:bg-brasa hover:after:w-full after:transition-all after:duration-300 cursor-pointer">Info</a>
+              </span>
+              <a class="btn btn-gold !px-4 !py-2.5 !text-[9px]">Reserve</a>
+            </nav>
+          </div>
+        </div>
+        <!-- C: pílula creme (La Dolce Vita) -->
+        <div class="spot-card p-5 reveal-up">
+          <div class="mb-4"><span class="badge badge-ghost">C · Blur + botão creme — La Dolce Vita</span></div>
+          <div class="relative h-[230px] rounded-2xl overflow-hidden border border-white/10 bg-charcoal">
+            <div class="absolute inset-0" style="background:radial-gradient(circle at 70% 90%,rgba(224,40,58,.35),transparent 60%)"></div>
+            <nav class="absolute top-0 inset-x-0 h-16 px-5 flex items-center justify-between border-b border-white/5 bg-charcoal/80 backdrop-blur-md">
+              <span class="text-lg tracking-tighter font-medium">LA BRASA</span>
+              <span class="hidden sm:flex gap-6 text-sm text-stone-400"><a class="hover:text-goldSoft transition-colors cursor-pointer">Menu</a><a class="hover:text-goldSoft transition-colors cursor-pointer">Ambiente</a><a class="hover:text-goldSoft transition-colors cursor-pointer">Gäste</a></span>
+              <a class="btn btn-cream btn-sm">Reservar</a>
+            </nav>
+          </div>
+        </div>
+        <!-- D: drawer mobile -->
+        <div class="spot-card p-5 reveal-up">
+          <div class="flex flex-wrap gap-3 items-center justify-between mb-4"><span class="badge badge-ghost">D · Drawer mobile — Nereo (translate-x-full)</span><button class="btn btn-glass btn-sm" id="drawer-demo-btn">Abrir</button></div>
+          <div class="relative h-[230px] rounded-2xl overflow-hidden border border-white/10 bg-charcoal">
+            <div class="h-14 px-5 flex items-center justify-between border-b border-white/5"><span class="font-serif uppercase tracking-[.25em] text-sm">Brasa</span><iconify-icon class="text-2xl" icon="solar:hamburger-menu-linear"></iconify-icon></div>
+            <div id="drawer-demo" class="absolute inset-0 bg-surface2 translate-x-full transition-transform duration-500 ease-luxe p-6 pt-8 flex flex-col gap-3">
+              <a class="font-serif text-2xl uppercase tracking-widest hover:text-brasa transition-colors cursor-pointer">Cardápio</a>
+              <a class="font-serif text-2xl uppercase tracking-widest hover:text-brasa transition-colors cursor-pointer">Reservas</a>
+              <a class="font-serif text-2xl uppercase tracking-widest hover:text-brasa transition-colors cursor-pointer">Contato</a>
+              <p class="mt-auto text-brasa font-serif">+55 (11) 4002-8922</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spot-card overflow-x-auto reveal-up">
+        <table class="spec-table min-w-[900px]">
+          <thead><tr><th>Propriedade</th><th>Desktop</th><th>Mobile</th><th>Comportamento</th></tr></thead>
+          <tbody>
+            <tr><td class="text-cream">Altura / z-index</td><td>80 px (h-20) · z-50 · fixed</td><td>80 px · drawer z-60</td><td>Esconde ao rolar para baixo, volta ao subir (GSAP y ±100 %)</td></tr>
+            <tr><td class="text-cream">Fundo</td><td>topo: gradiente charcoal→transparente · rolado: charcoal/86 + blur 14</td><td>idem</td><td>Troca aos 50 px de scroll — <span class="code">.nav-glass</span> + <span class="code">border-ember/40</span></td></tr>
+            <tr><td class="text-cream">Links</td><td>Inter 500 · 11 px · +.18em · UPPER · cream/70</td><td>Playfair 36 px · UPPER · +.1em</td><td>Sublinhado desenha (<span class="code">.side-link::after</span>), cor → brasa</td></tr>
+            <tr><td class="text-cream">CTA</td><td><span class="code">btn-fire btn-sm</span> com arrow-dot</td><td>oculto &lt; sm</td><td>Magnético + ripple</td></tr>
+            <tr><td class="text-cream">Ativo</td><td>link com cor brasa + linha 100 %</td><td>—</td><td>Scroll-spy (IntersectionObserver)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ============ SECTIONS ============ -->
+    <div id="c-sections" class="scroll-mt-28 mb-28">
+      <div class="flex items-end justify-between mb-8 reveal-up"><h3 class="t-h3">4.5 <span class="italic text-brasa font-editorial">Sections</span></h3><span class="t-helper text-muted hidden sm:block">Padrões de layout + fundos animados</span></div>
+      <div class="grid sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-10" id="section-patterns"></div>
+
+      <!-- Split (Balkan) ao vivo -->
+      <div class="spot-card p-6 md:p-12 mb-6 reveal-up">
+        <div class="grid lg:grid-cols-2 gap-14 items-center">
+          <div class="relative">
+            <div class="absolute -inset-4 border border-ember/25 rounded-3xl -rotate-2 transition-transform duration-700 hover:rotate-0"></div>
+            <div class="relative rounded-2xl overflow-hidden img-zoom-container shadow-2xl"><img alt="" class="w-full h-[440px] object-cover" src="templates/italian-restaurant-2.aura.build/assets/987227c4e9cd8a53_photo-1517248135467-4c7edcad34.jpg"/></div>
+            <div class="absolute -bottom-6 -right-3 md:-right-6 bg-surface2 p-5 rounded-2xl border border-ember/25 shadow-xl anim-float" style="animation-duration:7s"><iconify-icon class="text-4xl text-brasa mb-1" icon="solar:medal-star-linear"></iconify-icon><div class="font-serif text-lg tracking-tight">Melhor da cidade</div><div class="text-[10px] text-cream/60 uppercase tracking-widest mt-1">Guia Gastronômico</div></div>
+          </div>
+          <div>
+            <span class="t-eyebrow text-brasa flex items-center gap-3 mb-4"><span class="w-8 h-px bg-ember"></span>Seção dividida · Balkan</span>
+            <h4 class="t-h2 mb-6">Mais que pizzaria, <span class="text-fire italic font-light">uma brasa viva.</span></h4>
+            <p class="t-body text-cream/70 mb-8">Imagem com moldura deslocada e girada, selo flutuante, texto com palavra destacada em itálico e estatísticas em três colunas — o combo clássico de "sobre nós".</p>
+            <div class="grid grid-cols-3 gap-6 pt-8 border-t border-cream/10">
+              <div><div class="font-serif text-4xl text-fire" data-count="72" data-suffix="h">0</div><div class="t-label text-brasa mt-2 !text-[10px]">Massa</div></div>
+              <div><div class="font-serif text-4xl text-fire" data-count="450" data-suffix="°">0</div><div class="t-label text-brasa mt-2 !text-[10px]">Forno</div></div>
+              <div><div class="font-serif text-4xl text-fire" data-count="14" data-suffix="k">0</div><div class="t-label text-brasa mt-2 !text-[10px]">Avaliações</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spot-card overflow-x-auto reveal-up">
+        <table class="spec-table min-w-[900px]">
+          <thead><tr><th>Regra</th><th>Valor</th></tr></thead>
+          <tbody>
+            <tr><td class="text-cream">Container</td><td><span class="code">max-w-[1400px] mx-auto px-6 lg:px-12</span> (Nereo) · variantes <span class="code">max-w-7xl</span> (Balkan/La Dolce Vita) e <span class="code">max-w-6xl</span> (Kampai)</td></tr>
+            <tr><td class="text-cream">Ritmo vertical</td><td><span class="code">py-24 lg:py-32</span> (96 → 128 px) · hero <span class="code">min-h-screen</span></td></tr>
+            <tr><td class="text-cream">Cabeçalho de seção</td><td>eyebrow (linha 32 px + label) → h2 Playfair com palavra em <span class="code">font-editorial text-fire</span> → parágrafo <span class="code">max-w-2xl</span></td></tr>
+            <tr><td class="text-cream">Alternância de fundo</td><td><span class="code">bg-charcoal</span> ↔ <span class="code">bg-surface</span>, separadas por <span class="code">.section-line</span> (linha de luz animada)</td></tr>
+            <tr><td class="text-cream">Fundos animados</td><td><span class="code">aurora · dots · grid · rays · conic · rings · embers · steam</span> — sempre <span class="code">.ds-bg</span> absoluto atrás do conteúdo (<span class="code">z-10</span>), <span class="code">pointer-events:none</span></td></tr>
+            <tr><td class="text-cream">Entrada</td><td><span class="code">.reveal-up</span> (GSAP ScrollTrigger, start "top 85%") em blocos · <span class="code">.fade-up</span> (IntersectionObserver) em elementos menores</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ============ MODALS ============ -->
+    <div id="c-modals" class="scroll-mt-28 mb-28">
+      <div class="flex items-end justify-between mb-8 reveal-up"><h3 class="t-h3">4.6 <span class="italic text-brasa font-editorial">Modals</span></h3><span class="t-helper text-muted hidden sm:block">Backdrop blur · scale-in · ESC · foco</span></div>
+      <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-6 mb-6">
+        <button data-open="modal-res" class="spot-card p-7 text-left reveal-up group"><iconify-icon icon="solar:calendar-linear" class="text-3xl text-brasa mb-4 group-hover:scale-110 transition-transform"></iconify-icon><div class="font-serif text-xl">Reserva</div><p class="t-body-sm text-muted mt-2">Modal glass com formulário e sucesso.</p></button>
+        <button data-open="modal-confirm" class="spot-card p-7 text-left reveal-up group"><iconify-icon icon="solar:check-circle-linear" class="text-3xl text-ok mb-4 group-hover:scale-110 transition-transform"></iconify-icon><div class="font-serif text-xl">Confirmação</div><p class="t-body-sm text-muted mt-2">Diálogo compacto com ícone animado.</p></button>
+        <button data-open="drawer-cart" class="spot-card p-7 text-left reveal-up group"><iconify-icon icon="solar:cart-large-linear" class="text-3xl text-gold mb-4 group-hover:scale-110 transition-transform"></iconify-icon><div class="font-serif text-xl">Drawer</div><p class="t-body-sm text-muted mt-2">Painel lateral — carrinho / menu.</p></button>
+        <button id="open-cookie" class="spot-card p-7 text-left reveal-up group"><iconify-icon icon="solar:bell-linear" class="text-3xl text-info mb-4 group-hover:scale-110 transition-transform"></iconify-icon><div class="font-serif text-xl">Cookie + Toast</div><p class="t-body-sm text-muted mt-2">Banner inferior (Balkan) e toast.</p></button>
+      </div>
+      <div class="spot-card overflow-x-auto reveal-up">
+        <table class="spec-table min-w-[900px]">
+          <thead><tr><th>Tipo</th><th>Backdrop</th><th>Painel</th><th>Entrada</th><th>Saída</th><th>Acessibilidade</th></tr></thead>
+          <tbody>
+            <tr><td class="text-cream">Modal</td><td>#060203/78 + blur 10 · z-90</td><td>glass-card · raio 24 · max-w 460–520</td><td>translateY(30)+scale(.95) → 0 · .6 s luxe · fade .4 s</td><td>reverso .35 s</td><td>role="dialog" aria-modal · ESC · clique fora · scroll travado (lenis.stop)</td></tr>
+            <tr><td class="text-cream">Drawer</td><td>igual</td><td>surface2 · largura 380 · à direita</td><td>translateX(100%) → 0 · .5 s luxe</td><td>reverso</td><td>foco no botão fechar</td></tr>
+            <tr><td class="text-cream">Cookie</td><td>sem backdrop</td><td>glass-card · fixo bottom-6</td><td>translateY(40)+opacity · .5 s</td><td>reverso + display none</td><td>role="region"</td></tr>
+            <tr><td class="text-cream">Toast</td><td>—</td><td>pílula creme · z-120</td><td>translateY(30) → 0 · .5 s</td><td>auto 2.4 s</td><td>role="status"</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ============ BADGES ============ -->
+    <div id="c-badges" class="scroll-mt-28 mb-28">
+      <div class="flex items-end justify-between mb-8 reveal-up"><h3 class="t-h3">4.7 <span class="italic text-brasa font-editorial">Badges</span></h3></div>
+      <div class="spot-card p-8 mb-6 reveal-up">
+        <div class="flex flex-wrap items-center gap-4 mb-8">
+          <span class="badge badge-eyebrow glow-border"><iconify-icon icon="solar:chef-hat-linear"></iconify-icon>Novo no cardápio</span>
+          <span class="badge badge-solid"><iconify-icon icon="solar:fire-bold"></iconify-icon>Casa recomenda</span>
+          <span class="badge badge-solid badge-shine !bg-gradient-to-r !from-brasa !to-ember">Hot</span>
+          <span class="badge badge-ghost">Para grupos</span>
+          <span class="badge badge-gold">54</span>
+          <span class="badge badge-num">101</span>
+          <span class="badge badge-ghost !text-ok !border-ok/40"><span class="dot-live"></span>Aberto agora</span>
+          <span class="badge badge-ghost !text-warn !border-warn/40"><iconify-icon icon="solar:clock-circle-linear"></iconify-icon>Em preparo</span>
+          <span class="badge badge-ghost !text-danger !border-danger/40"><iconify-icon icon="solar:danger-triangle-linear"></iconify-icon>Esgotado</span>
+          <span class="badge badge-ghost !text-info !border-info/40"><iconify-icon icon="solar:info-circle-linear"></iconify-icon>Vegetariana</span>
+          <span class="badge badge-ghost !text-basil !border-basil/40"><iconify-icon icon="solar:leaf-linear"></iconify-icon>Vegana</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-8 text-sm text-creamDim">
+          <span class="relative inline-flex"><iconify-icon icon="solar:bell-linear" class="text-3xl"></iconify-icon><span class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-ember text-[9px] font-semibold text-white flex items-center justify-center">3</span><span class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-ember" style="animation:ping 1.6s cubic-bezier(0,0,.2,1) infinite"></span></span>
+          <span class="flex items-center gap-1 text-gold"><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-bold"></iconify-icon><iconify-icon icon="solar:star-linear"></iconify-icon><span class="text-cream ml-1">4.8</span></span>
+          <span class="relative inline-block">Selo flutuante <span class="absolute -top-4 -right-14 badge badge-solid !text-[9px]">Hausempfehlung</span></span>
+        </div>
+      </div>
+      <div class="spot-card overflow-x-auto reveal-up">
+        <table class="spec-table min-w-[820px]">
+          <thead><tr><th>Variante</th><th>Padding</th><th>Tipografia</th><th>Fundo / borda</th><th>Cor</th><th>Uso</th></tr></thead>
+          <tbody>
+            <tr><td class="text-cream">Eyebrow</td><td>6.4×13.6</td><td>Inter 500 · 10.9 px · +.16em · UPPER</td><td>ember/12 + borda ember/40 + blur</td><td>#FFC9BF</td><td>Acima do h1 (La Dolce Vita)</td></tr>
+            <tr><td class="text-cream">Solid</td><td>5.6×12.8</td><td>Inter 600 · 10 px · +.14em</td><td>ember + glow</td><td>#fff</td><td>Destaque no canto do card (Balkan)</td></tr>
+            <tr><td class="text-cream">Ghost</td><td>5.6×12.8</td><td>igual</td><td>surface + borda white/12</td><td>cream/85</td><td>Rótulos neutros / status colorido</td></tr>
+            <tr><td class="text-cream">Gold (preço)</td><td>4.8×12.8</td><td>Playfair 14.4 px · +.08em</td><td>black/80 + blur</td><td>gold</td><td>Sobre imagem (Kampai)</td></tr>
+            <tr><td class="text-cream">Num</td><td>4.5×8</td><td>Inter 11 px</td><td>surface + white/6</td><td>cream/50</td><td>Código do prato</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ============ TOOLTIPS ============ -->
+    <div id="c-tooltips" class="scroll-mt-28">
+      <div class="flex items-end justify-between mb-8 reveal-up"><h3 class="t-h3">4.8 <span class="italic text-brasa font-editorial">Tooltips</span></h3><span class="t-helper text-muted hidden sm:block">CSS puro · hover + foco</span></div>
+      <div class="spot-card p-10 mb-6 reveal-up">
+        <div class="flex flex-wrap items-center justify-center gap-x-14 gap-y-16 pt-10 pb-4">
+          <span class="tip"><button class="btn btn-icon" aria-label="Alergênicos"><iconify-icon icon="solar:info-circle-linear"></iconify-icon></button><span class="tip-box" role="tooltip">Contém glúten e lactose</span></span>
+          <span class="tip below dark"><button class="btn btn-icon" aria-label="Pimenta"><iconify-icon icon="solar:fire-linear"></iconify-icon></button><span class="tip-box" role="tooltip">Picância média · 🌶🌶</span></span>
+          <span class="tip left"><button class="btn btn-icon" aria-label="Favorito"><iconify-icon icon="solar:heart-linear"></iconify-icon></button><span class="tip-box" role="tooltip">Salvar nos favoritos</span></span>
+          <span class="tip rich"><span class="badge badge-eyebrow cursor-help"><iconify-icon icon="solar:magic-stick-3-linear"></iconify-icon>Passe o mouse — rich</span>
+            <span class="tip-box" role="tooltip"><span class="glass-card block rounded-2xl p-4 text-left"><span class="flex items-center gap-3 mb-2"><span class="w-10 h-10 rounded-full overflow-hidden block"><img class="w-full h-full object-cover" alt="" src="templates/italian-restaurant-2.aura.build/assets/122646786d43ef3e_photo-1565299624946-b28f40a0ae.avif"/></span><span><span class="block font-serif text-base text-cream">Margherita Brasa</span><span class="block text-[10px] text-gold">R$ 54</span></span></span><span class="block text-[11px] text-creamDim font-light leading-snug">Fior di latte, tomate San Marzano e manjericão. Ponto leopardo em 90 segundos.</span></span></span></span>
+        </div>
+      </div>
+      <div class="spot-card overflow-x-auto reveal-up">
+        <table class="spec-table min-w-[820px]">
+          <thead><tr><th>Propriedade</th><th>Valor</th></tr></thead>
+          <tbody>
+            <tr><td class="text-cream">Posições</td><td>top (padrão) · <span class="code">.below</span> · <span class="code">.left</span> · <span class="code">.rich</span> (conteúdo livre) · <span class="code">.dark</span> (vermelho)</td></tr>
+            <tr><td class="text-cream">Caixa</td><td>padding 8×13 px · raio 9.6 px · Inter 500 · 11.5 px · fundo cream / texto charcoal (contraste 15:1) · sombra 0 14 40 -8</td></tr>
+            <tr><td class="text-cream">Seta</td><td>9×9 px rotacionada 45°, herda o fundo</td></tr>
+            <tr><td class="text-cream">Gatilho</td><td><span class="code">:hover</span> e <span class="code">:focus-within</span> — funciona por teclado</td></tr>
+            <tr><td class="text-cream">Animação</td><td>opacity .25 s + translateY(8→0) e scale(.94→1) em .45 s luxe</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-line"></div>
+
+<!-- =================================================================
+     5) ÍCONES
+     ================================================================= -->
+<section id="icones" class="relative py-24 lg:py-36 overflow-hidden bg-charcoal">
+  <div class="ds-bg" data-bg="grid"></div>
+  <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12">
+    <div class="text-center space-y-4 mb-16 reveal-up">
+      <div class="flex items-center justify-center gap-3"><div class="w-8 h-[1px] bg-ember"></div><span class="t-label text-brasa">05 · Ícones</span><div class="w-8 h-[1px] bg-ember"></div></div>
+      <h2 class="t-h1">Traço fino, <em class="font-editorial text-fire pr-1">calor</em> no detalhe</h2>
+      <p class="t-body text-creamDim max-w-2xl mx-auto">Dois conjuntos das referências: <b class="font-medium text-cream">Solar Linear</b> via <span class="code">&lt;iconify-icon&gt;</span> (Balkan, La Dolce Vita, Kampai) e <b class="font-medium text-cream">Lucide</b> via <span class="code">data-lucide</span> (Nereo). Clique num ícone para copiar o código.</p>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-6 mb-10">
+      <div class="spot-card p-7 reveal-up lg:col-span-2">
+        <div class="t-h6 text-brasa mb-6">Solar · linear — stroke 1.5 px</div>
+        <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-3" id="icons-solar"></div>
+      </div>
+      <div class="spot-card p-7 reveal-up">
+        <div class="t-h6 text-brasa mb-6">Lucide — stroke 2 px</div>
+        <div class="grid grid-cols-4 gap-3" id="icons-lucide"></div>
+      </div>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-6">
+      <div class="spot-card p-7 reveal-up">
+        <div class="t-h6 text-brasa mb-6">Tamanhos e cores</div>
+        <div class="flex items-end gap-8 mb-8 flex-wrap">
+          <div class="text-center"><iconify-icon icon="solar:fire-linear" width="16" class="text-cream"></iconify-icon><div class="t-helper text-muted mt-2">16 · inline</div></div>
+          <div class="text-center"><iconify-icon icon="solar:fire-linear" width="20" class="text-cream"></iconify-icon><div class="t-helper text-muted mt-2">20 · botão</div></div>
+          <div class="text-center"><iconify-icon icon="solar:fire-linear" width="24" class="text-cream"></iconify-icon><div class="t-helper text-muted mt-2">24 · padrão</div></div>
+          <div class="text-center"><iconify-icon icon="solar:fire-linear" width="32" class="text-cream"></iconify-icon><div class="t-helper text-muted mt-2">32 · card</div></div>
+          <div class="text-center"><iconify-icon icon="solar:fire-linear" width="48" class="text-brasa"></iconify-icon><div class="t-helper text-muted mt-2">48 · destaque</div></div>
+        </div>
+        <div class="flex gap-3 flex-wrap">
+          <span class="w-12 h-12 rounded-full border border-ember/40 bg-ember/10 flex items-center justify-center text-brasa"><iconify-icon icon="solar:fire-linear" class="text-xl"></iconify-icon></span>
+          <span class="w-12 h-12 rounded-full border border-gold/40 bg-gold/10 flex items-center justify-center text-gold"><iconify-icon icon="solar:medal-star-linear" class="text-xl"></iconify-icon></span>
+          <span class="w-12 h-12 rounded-full border border-white/15 bg-white/5 flex items-center justify-center text-cream"><iconify-icon icon="solar:chef-hat-linear" class="text-xl"></iconify-icon></span>
+          <span class="w-12 h-12 rounded-full bg-ember flex items-center justify-center text-white shadow-glow"><iconify-icon icon="solar:cart-large-linear" class="text-xl"></iconify-icon></span>
+          <span class="w-12 h-12 rounded-full border border-ok/40 bg-ok/10 flex items-center justify-center text-ok"><iconify-icon icon="solar:check-circle-linear" class="text-xl"></iconify-icon></span>
+        </div>
+        <p class="t-body-sm text-muted mt-6">Medalhão de ícone: 48 px · <span class="code">rounded-full</span> · borda 40 % + fundo 10 % da mesma cor. Estados: cream/70 → brasa no hover; disabled cream/30.</p>
+      </div>
+      <div class="spot-card p-7 reveal-up">
+        <div class="t-h6 text-brasa mb-6">Ícones animados</div>
+        <div class="flex flex-wrap gap-8 items-center text-3xl">
+          <span class="group cursor-pointer flex flex-col items-center gap-2"><iconify-icon icon="solar:fire-bold" class="text-brasa anim-flicker"></iconify-icon><span class="t-helper text-muted">flicker</span></span>
+          <span class="group cursor-pointer flex flex-col items-center gap-2"><iconify-icon icon="solar:settings-linear" class="anim-spin-slow text-gold" style="animation-duration:6s"></iconify-icon><span class="t-helper text-muted">spin</span></span>
+          <span class="group cursor-pointer flex flex-col items-center gap-2"><iconify-icon icon="solar:heart-linear" class="text-ember group-hover:scale-125 group-hover:text-brasa transition-all duration-300"></iconify-icon><span class="t-helper text-muted">pop</span></span>
+          <span class="group cursor-pointer flex flex-col items-center gap-2"><iconify-icon icon="solar:arrow-right-linear" class="group-hover:translate-x-2 transition-transform duration-300"></iconify-icon><span class="t-helper text-muted">slide</span></span>
+          <span class="group cursor-pointer flex flex-col items-center gap-2"><iconify-icon icon="solar:alt-arrow-down-linear" class="animate-bounce text-cream/60"></iconify-icon><span class="t-helper text-muted">bounce</span></span>
+          <span class="group cursor-pointer flex flex-col items-center gap-2"><iconify-icon icon="solar:bell-linear" class="group-hover:rotate-[18deg] origin-top transition-transform duration-300"></iconify-icon><span class="t-helper text-muted">tilt</span></span>
+        </div>
+        <pre class="codeblock mt-8">&lt;<span class="k">iconify-icon</span> icon=<span class="s">"solar:fire-linear"</span> class=<span class="s">"text-brasa text-2xl"</span>&gt;&lt;/<span class="k">iconify-icon</span>&gt;
+&lt;<span class="k">i</span> data-lucide=<span class="s">"flame"</span> class=<span class="s">"w-5 h-5 text-brasa"</span>&gt;&lt;/<span class="k">i</span>&gt;  <span class="c">&lt;!-- lucide.createIcons() --&gt;</span></pre>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-line"></div>
+
+<!-- =================================================================
+     6) ANIMAÇÕES
+     ================================================================= -->
+<section id="animacoes" class="relative py-24 lg:py-36 overflow-hidden bg-surface">
+  <div class="ds-bg" data-bg="dots"></div>
+  <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12">
+    <div class="text-center space-y-4 mb-16 reveal-up">
+      <div class="flex items-center justify-center gap-3"><div class="w-8 h-[1px] bg-ember"></div><span class="t-label text-brasa">06 · Animações</span><div class="w-8 h-[1px] bg-ember"></div></div>
+      <h2 class="t-h1">Movimento com <em class="font-editorial text-fire pr-1">temperatura</em></h2>
+      <p class="t-body text-creamDim max-w-2xl mx-auto">Entrada em cascata, brasas subindo, vapor, glow pulsante e microinterações. Tudo respeita <span class="code">prefers-reduced-motion</span>.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6 mb-16" id="anim-grid">
+      <!-- 1 fade-up -->
+      <div class="spot-card p-7 reveal-up"><div class="flex justify-between items-center mb-5"><span class="t-h6 text-brasa">01 · fade-up</span><button class="btn btn-glass btn-sm !py-1.5 !px-3 !text-[11px]" data-replay="fade">↻ replay</button></div>
+        <div class="h-32 flex items-center justify-center rounded-2xl bg-black/30 border border-white/5"><div id="demo-fade" class="fade-up visible font-serif text-2xl">Cada fatia conta</div></div>
+        <p class="t-body-sm text-muted mt-4"><span class="code">.fade-up → .visible</span> · 20 px · .8 s ease-out · IntersectionObserver (Balkan)</p></div>
+      <!-- 2 text-mask -->
+      <div class="spot-card p-7 reveal-up"><div class="flex justify-between items-center mb-5"><span class="t-h6 text-brasa">02 · text-mask</span><button class="btn btn-glass btn-sm !py-1.5 !px-3 !text-[11px]" data-replay="mask">↻ replay</button></div>
+        <div class="h-32 flex flex-col items-center justify-center rounded-2xl bg-black/30 border border-white/5 font-serif text-3xl leading-tight"><span class="text-mask block pb-1"><span class="block mk">Extraordinária</span></span><span class="text-mask block pb-1"><span class="block mk italic text-brasa">por natureza</span></span></div>
+        <p class="t-body-sm text-muted mt-4"><span class="code">yPercent 110→0</span> · power4.out · 1.1 s · stagger .12 (Nereo)</p></div>
+      <!-- 3 stagger -->
+      <div class="spot-card p-7 reveal-up"><div class="flex justify-between items-center mb-5"><span class="t-h6 text-brasa">03 · stagger + reveal-up</span><button class="btn btn-glass btn-sm !py-1.5 !px-3 !text-[11px]" data-replay="stagger">↻ replay</button></div>
+        <div class="h-32 flex items-center justify-center gap-3 rounded-2xl bg-black/30 border border-white/5" id="demo-stagger"><i class="stg w-12 h-16 rounded-xl bg-gradient-to-b from-brasa to-ember"></i><i class="stg w-12 h-16 rounded-xl bg-gradient-to-b from-ember to-wine"></i><i class="stg w-12 h-16 rounded-xl bg-gradient-to-b from-gold to-goldDeep"></i><i class="stg w-12 h-16 rounded-xl bg-gradient-to-b from-cream to-creamDim"></i></div>
+        <p class="t-body-sm text-muted mt-4"><span class="code">.reveal-up</span> · y 30→0 · 1.2 s power3.out · ScrollTrigger "top 85%" (Kampai)</p></div>
+      <!-- 4 embers -->
+      <div class="spot-card p-7 reveal-up"><div class="mb-5"><span class="t-h6 text-brasa">04 · brasas subindo</span></div>
+        <div class="relative h-32 rounded-2xl bg-black/30 border border-white/5 overflow-hidden"><div class="ds-bg" data-bg="embers-dense"></div><div class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-ember/40 to-transparent"></div></div>
+        <p class="t-body-sm text-muted mt-4"><span class="code">.ember-dot</span> · <span class="code">emberRise</span> 5–11 s linear · canvas no hero</p></div>
+      <!-- 5 steam -->
+      <div class="spot-card p-7 reveal-up"><div class="mb-5"><span class="t-h6 text-brasa">05 · vapor</span></div>
+        <div class="relative h-32 rounded-2xl bg-black/30 border border-white/5 overflow-hidden"><div class="steam-container"><div class="steam-puff w-28 h-28 left-[10%] bottom-[-30%]"></div><div class="steam-puff w-32 h-32 left-[40%] bottom-[-40%]" style="animation-delay:2s"></div><div class="steam-puff w-24 h-24 left-[70%] bottom-[-30%]" style="animation-delay:4s"></div></div></div>
+        <p class="t-body-sm text-muted mt-4"><span class="code">.steam-puff</span> · <span class="code">rise</span> 8 s ease-out · blur 20 (La Dolce Vita)</p></div>
+      <!-- 6 glow pulse -->
+      <div class="spot-card p-7 reveal-up"><div class="mb-5"><span class="t-h6 text-brasa">06 · glow pulse + shine (opt-in)</span></div>
+        <div class="h-32 flex items-center justify-center gap-5 rounded-2xl bg-black/30 border border-white/5"><button class="btn btn-fire btn-md fx-glow">Pulsa</button><span class="badge badge-solid badge-shine">Shine</span></div>
+        <p class="t-body-sm text-muted mt-4"><span class="code">glowPulse 3.2 s</span> · <span class="code">shineLoop 3.6 s</span></p></div>
+      <!-- 7 conic border -->
+      <div class="spot-card p-7 reveal-up"><div class="mb-5"><span class="t-h6 text-brasa">07 · borda cônica</span></div>
+        <div class="h-32 flex items-center justify-center rounded-2xl bg-black/30 border border-white/5"><div class="glow-border bg-charcoal px-8 py-5 font-serif text-xl">@property --angle</div></div>
+        <p class="t-body-sm text-muted mt-4"><span class="code">.glow-border</span> · conic-gradient girando 5 s</p></div>
+      <!-- 8 rings -->
+      <div class="spot-card p-7 reveal-up"><div class="mb-5"><span class="t-h6 text-brasa">08 · anéis + texto circular</span></div>
+        <div class="relative h-32 flex items-center justify-center rounded-2xl bg-black/30 border border-white/5 overflow-hidden"><svg class="w-28 h-28 anim-spin-slow" style="animation-duration:14s" viewBox="0 0 300 300"><defs><path id="circ2" d="M150,150 m-125,0 a125,125 0 1,1 250,0 a125,125 0 1,1 -250,0"/></defs><text fill="rgba(246,236,224,.7)" font-family="Montserrat" font-size="19" letter-spacing="7"><textPath href="#circ2">FORNO ✦ FOGO ✦ FARINHA ✦ FORNO ✦</textPath></text></svg><iconify-icon icon="solar:fire-bold" class="absolute text-brasa text-2xl anim-flicker"></iconify-icon></div>
+        <p class="t-body-sm text-muted mt-4">SVG <span class="code">textPath</span> + <span class="code">spin</span> · anéis tracejados (Nereo)</p></div>
+      <!-- 9 float / kenburns -->
+      <div class="spot-card p-7 reveal-up"><div class="mb-5"><span class="t-h6 text-brasa">09 · float + ken burns</span></div>
+        <div class="relative h-32 rounded-2xl border border-white/5 overflow-hidden"><img alt="" class="absolute inset-0 w-full h-full object-cover" style="animation:kenburns 12s ease-in-out infinite alternate" src="templates/italian-restaurant-2.aura.build/assets/b80466549f7f6f41_photo-1583394293214-28ded15ee5.avif"/><div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 to-transparent"></div><span class="badge badge-solid absolute right-3 bottom-3 anim-float">Flutua</span></div>
+        <p class="t-body-sm text-muted mt-4"><span class="code">float 6 s</span> · <span class="code">kenburns 26 s</span> alternate</p></div>
+      <!-- 10 counter -->
+      <div class="spot-card p-7 reveal-up"><div class="flex justify-between items-center mb-5"><span class="t-h6 text-brasa">10 · contador</span><button class="btn btn-glass btn-sm !py-1.5 !px-3 !text-[11px]" data-replay="count">↻ replay</button></div>
+        <div class="h-32 flex items-center justify-center rounded-2xl bg-black/30 border border-white/5"><div class="font-serif text-6xl text-fire" id="demo-count" data-count="14500" data-suffix="+">0</div></div>
+        <p class="t-body-sm text-muted mt-4">gsap.to(obj, { v: n, duration: 2.2, ease: 'power2.out' })</p></div>
+      <!-- 11 skeleton -->
+      <div class="spot-card p-7 reveal-up"><div class="mb-5"><span class="t-h6 text-brasa">11 · skeleton shimmer</span></div>
+        <div class="h-32 rounded-2xl bg-black/30 border border-white/5 p-4 flex gap-4 items-center"><div class="cms-loading w-20 h-20 !rounded-full flex-none"></div><div class="flex-1 space-y-3"><div class="cms-loading h-4 w-3/4"></div><div class="cms-loading h-3 w-full"></div><div class="cms-loading h-3 w-1/2"></div></div></div>
+        <p class="t-body-sm text-muted mt-4"><span class="code">.cms-loading</span> · <span class="code">cms-shimmer 1.5 s</span></p></div>
+      <!-- 12 marquee/magnetic -->
+      <div class="spot-card p-7 reveal-up"><div class="mb-5"><span class="t-h6 text-brasa">12 · magnético + ripple</span></div>
+        <div class="h-32 flex items-center justify-center rounded-2xl bg-black/30 border border-white/5"><button data-magnetic data-ripple class="btn btn-fire btn-md">Me persiga</button></div>
+        <p class="t-body-sm text-muted mt-4">mouse → <span class="code">gsap.to(x, y)</span> 0.3 · elastic.out ao sair</p></div>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-6 mb-6">
+      <div class="spot-card p-2 overflow-x-auto reveal-up">
+        <table class="spec-table">
+          <thead><tr><th>Token</th><th>Valor</th><th>Onde</th></tr></thead>
+          <tbody>
+            <tr><td class="text-cream">ease-luxe</td><td><span class="code">cubic-bezier(.16,1,.3,1)</span></td><td>Hover de botões, cards, zoom, drawer</td></tr>
+            <tr><td class="text-cream">ease-out</td><td><span class="code">ease-out .8 s</span></td><td>fade-up (Balkan)</td></tr>
+            <tr><td class="text-cream">gsap power3.out</td><td><span class="code">1.2 s</span></td><td>reveal-up (Kampai)</td></tr>
+            <tr><td class="text-cream">gsap power4.out</td><td><span class="code">1.1 s</span></td><td>text-mask do hero</td></tr>
+            <tr><td class="text-cream">Micro</td><td><span class="code">.25–.4 s</span></td><td>cor, borda, foco</td></tr>
+            <tr><td class="text-cream">Ambiente</td><td><span class="code">4–200 s linear/ease-in-out infinite</span></td><td>aurora, rings, embers, glow, marquee</td></tr>
+            <tr><td class="text-cream">Stagger</td><td><span class="code">.08–.15 s</span></td><td>listas, chips, linhas de título</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="spot-card p-7 reveal-up">
+        <pre class="codeblock"><span class="c">/* JS — mesmas rotinas das referências */</span>
+gsap.<span class="k">registerPlugin</span>(ScrollTrigger);
+<span class="k">document</span>.querySelectorAll(<span class="s">'.reveal-up'</span>).forEach(el =&gt;
+  gsap.to(el, { y: <span class="n">0</span>, opacity: <span class="n">1</span>, duration: <span class="n">1.2</span>, ease: <span class="s">'power3.out'</span>,
+    scrollTrigger: { trigger: el, start: <span class="s">'top 85%'</span>,
+      toggleActions: <span class="s">'play none none reverse'</span> } }));
+<span class="c">// Balkan: IntersectionObserver → .fade-up.visible</span>
+<span class="c">// Nereo: Lenis + gsap.ticker</span>
+<span class="k">const</span> lenis = <span class="k">new</span> Lenis({ duration: <span class="n">1.2</span> });
+gsap.ticker.add(t =&gt; lenis.raf(t * <span class="n">1000</span>));</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =================================================================
+     CTA BANNER (ref.webp: "Let Flavor Lead the Way") + FOOTER
+     ================================================================= -->
+<section id="cta" class="relative overflow-hidden py-28 lg:py-44 bg-charcoal">
+  <div class="absolute inset-0"><img alt="" class="w-full h-full object-cover opacity-40" src="templates/balkan-cuisine-80.aura.build/assets/2fbd4d8ead28722c_photo-1504674900247-0877df9cc8.avif"/><div class="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/50 to-charcoal"></div></div>
+  <div class="ds-bg" data-bg="aurora"></div>
+  <div class="relative z-10 max-w-3xl mx-auto px-6 text-center space-y-8">
+    <h2 class="t-display reveal-up">Deixe o sabor<br/><em class="font-editorial text-fire pr-2">guiar</em></h2>
+    <p class="t-body-lg text-creamDim reveal-up">Reserve sua mesa hoje e sinta o calor do forno a poucos passos.</p>
+    <div class="flex flex-wrap items-center justify-center gap-4 reveal-up">
+      <button data-open="modal-res" data-magnetic data-ripple class="btn btn-fire btn-lg">Reservar mesa <span class="arrow-dot"><iconify-icon icon="solar:arrow-right-up-linear"></iconify-icon></span></button>
+      <a href="#hero" data-magnetic data-ripple class="btn btn-gold btn-lg">Voltar ao topo</a>
+    </div>
+  </div>
+</section>
+
+<footer class="relative bg-charcoal border-t border-ember/25 overflow-hidden">
+  <div class="ds-bg" data-bg="dots"></div>
+  <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 py-20 grid md:grid-cols-2 lg:grid-cols-4 gap-12">
+    <div class="lg:col-span-2 space-y-5">
+      <div class="flex items-center gap-3"><svg class="w-10 h-10" viewBox="0 0 32 32"><path d="M16 3c1 5 8 8 8 15a8 8 0 0 1-16 0c0-3.2 2-5.4 3.4-7.5 1 2.2 2 3.300 3.400 3.300-.4-3.200-.9-6.700 1.200-10.800z" fill="url(#fl)"/></svg><span class="font-serif text-4xl">Brasa</span></div>
+      <p class="t-body-sm text-muted max-w-sm">Pizza a lenha, massa de 72 horas e um design system que faz o site cheirar a forno aceso.</p>
+      <div class="flex gap-3">
+        <a class="btn btn-icon !w-10 !h-10 !text-base" aria-label="Instagram"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/></svg></a>
+        <a class="btn btn-icon !w-10 !h-10 !text-base" aria-label="Facebook"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+        <a class="btn btn-icon !w-10 !h-10 !text-base" aria-label="E-mail"><iconify-icon icon="solar:letter-linear"></iconify-icon></a>
+      </div>
+    </div>
+    <div><h5 class="t-h6 text-brasa mb-5">Explorar</h5><ul class="space-y-3 text-sm text-creamDim"><li><a class="side-link !normal-case !tracking-normal !text-sm" href="#tipografia">Tipografia</a></li><li><a class="side-link !normal-case !tracking-normal !text-sm" href="#cores">Cores</a></li><li><a class="side-link !normal-case !tracking-normal !text-sm" href="#componentes">Componentes</a></li><li><a class="side-link !normal-case !tracking-normal !text-sm" href="#animacoes">Animações</a></li></ul></div>
+    <div><h5 class="t-h6 text-brasa mb-5">Contato</h5><ul class="space-y-3 text-sm text-creamDim"><li class="flex gap-3"><iconify-icon class="text-brasa mt-0.5" icon="solar:map-point-linear"></iconify-icon>Rua do Forno, 450 — SP</li><li class="flex gap-3"><iconify-icon class="text-brasa mt-0.5" icon="solar:phone-linear"></iconify-icon>+55 (11) 4002-8922</li><li class="flex gap-3"><iconify-icon class="text-brasa mt-0.5" icon="solar:clock-circle-linear"></iconify-icon>Ter–Dom · 18h–00h</li></ul></div>
+  </div>
+  <div class="relative z-10 border-t border-white/5"><div class="max-w-[1400px] mx-auto px-6 lg:px-12 py-6 flex flex-wrap justify-between gap-3 text-[11px] text-muted"><span>© 2026 Brasa Pizzeria — Design System v1.0</span><span>Baseado em Balkan Cuisine · La Dolce Vita · Nereo · Kampai · ref.webp</span></div></div>
+</footer>
+</main>
+
+<!-- =================================================================
+     OVERLAYS: modais, drawer, cookie, toast
+     ================================================================= -->
+<div class="modal-backdrop" id="modal-res" role="dialog" aria-modal="true" aria-labelledby="mr-t">
+  <div class="modal-panel glass-card rounded-3xl p-8 w-full max-w-[500px] relative">
+    <button class="absolute top-5 right-5 text-cream/60 hover:text-brasa hover:rotate-90 transition-all duration-300" data-close aria-label="Fechar"><iconify-icon class="text-2xl" icon="solar:close-circle-linear"></iconify-icon></button>
+    <div id="mr-form">
+      <span class="t-label text-brasa">Concierge</span>
+      <h3 id="mr-t" class="font-serif text-3xl uppercase mt-2">Reserve sua <span class="italic text-brasa">mesa</span></h3>
+      <div class="w-16 h-px bg-ember my-5"></div>
+      <form class="space-y-4" id="modal-form">
+        <div class="float-wrap"><input class="field" required placeholder=" " id="mn"/><label for="mn">Nome completo</label></div>
+        <div class="grid grid-cols-2 gap-4"><input class="field" type="date" required/><select class="field"><option>2 pessoas</option><option>4 pessoas</option><option>6 pessoas</option></select></div>
+        <button type="submit" data-ripple class="btn btn-fire btn-md w-full">Confirmar reserva</button>
+      </form>
+    </div>
+    <div id="mr-ok" class="hidden text-center py-6">
+      <div class="w-20 h-20 mx-auto rounded-full border border-ok/50 bg-ok/10 flex items-center justify-center mb-6"><svg class="w-10 h-10 text-ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.500 4.500L19 7" stroke-dasharray="30" stroke-dashoffset="30" style="animation:dashIn .7s .2s ease-out forwards"/></svg></div>
+      <h3 class="font-serif text-3xl">Mesa reservada!</h3><p class="t-body-sm text-creamDim mt-3">Enviamos a confirmação por e-mail. Até logo!</p>
+      <button data-close class="btn btn-glass btn-sm mt-6">Fechar</button>
+    </div>
+  </div>
+</div>
+<style>@keyframes dashIn{to{stroke-dashoffset:0}}</style>
+
+<div class="modal-backdrop" id="modal-confirm" role="dialog" aria-modal="true">
+  <div class="modal-panel glass-card rounded-3xl p-8 w-full max-w-[400px] text-center">
+    <div class="w-16 h-16 mx-auto rounded-full bg-ember/15 border border-ember/40 flex items-center justify-center mb-5 anim-flicker"><iconify-icon class="text-3xl text-brasa" icon="solar:fire-bold"></iconify-icon></div>
+    <h3 class="font-serif text-2xl">Acender o forno?</h3>
+    <p class="t-body-sm text-creamDim mt-3">Sua pizza entra no forno em 90 segundos. Não dá para cancelar depois.</p>
+    <div class="flex gap-3 mt-7 justify-center"><button data-close class="btn btn-glass btn-sm">Voltar</button><button data-close data-toast="Pedido enviado ao forno 🔥" data-ripple class="btn btn-fire btn-sm">Acender</button></div>
+  </div>
+</div>
+
+<div class="modal-backdrop !justify-end !p-0" id="drawer-cart" role="dialog" aria-modal="true">
+  <aside class="drawer-panel h-full w-full max-w-[400px] bg-surface2 border-l border-ember/30 p-7 flex flex-col">
+    <div class="flex items-center justify-between mb-6"><h3 class="font-serif text-2xl">Seu pedido</h3><button data-close aria-label="Fechar" class="hover:rotate-90 hover:text-brasa transition-all duration-300"><iconify-icon class="text-2xl" icon="solar:close-circle-linear"></iconify-icon></button></div>
+    <div class="space-y-4 flex-1 overflow-y-auto" data-lenis-prevent>
+      <div class="flex gap-4 items-center"><img class="w-16 h-16 rounded-full object-cover" alt="" src="templates/italian-restaurant-2.aura.build/assets/122646786d43ef3e_photo-1565299624946-b28f40a0ae.avif"/><div class="flex-1"><div class="font-serif">Margherita Brasa</div><div class="text-xs text-muted">Borda recheada</div></div><span class="t-price text-gold !text-lg">54</span></div>
+      <div class="flex gap-4 items-center"><img class="w-16 h-16 rounded-full object-cover" alt="" src="templates/italian-restaurant-2.aura.build/assets/b020e4a8b4485856_photo-1551024709-8f23befc6f87.avif"/><div class="flex-1"><div class="font-serif">Negroni defumado</div><div class="text-xs text-muted">2 unidades</div></div><span class="t-price text-gold !text-lg">64</span></div>
+    </div>
+    <div class="border-t border-white/10 pt-5 mt-5"><div class="flex justify-between mb-4"><span class="text-creamDim">Total</span><span class="t-price text-cream !text-2xl">R$ 118</span></div><button data-close data-toast="Pedido finalizado!" data-ripple class="btn btn-fire btn-md w-full">Finalizar pedido</button></div>
+  </aside>
+</div>
+
+<div id="cookie" class="fixed bottom-6 left-6 right-6 md:left-auto md:max-w-sm z-[95] glass-card rounded-2xl p-5 transition-all duration-500 translate-y-10 opacity-0 pointer-events-none" role="region" aria-label="Cookies">
+  <div class="flex gap-4"><iconify-icon class="text-2xl text-brasa flex-none" icon="solar:info-circle-linear"></iconify-icon><div><p class="text-sm text-creamDim">Usamos cookies para deixar a experiência mais quentinha. Tudo bem?</p><div class="flex gap-2 mt-4"><button id="cookie-ok" class="btn btn-fire btn-sm !py-2">Aceitar</button><button id="cookie-no" class="btn btn-glass btn-sm !py-2">Recusar</button></div></div></div>
+</div>
+<div id="toast" class="toast" role="status"><div class="badge bg-cream text-charcoal px-5 py-3 text-sm font-medium shadow-2xl"><iconify-icon icon="solar:check-circle-bold" class="text-ok text-lg"></iconify-icon><span id="toast-msg"></span></div></div>
+
+<script>
+(() => {
+'use strict';
+const $  = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const rand = (a, b) => a + Math.random() * (b - a);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const hasGsap = !!window.gsap;
+let lenis = null;
+
+/* ------------------------------------------------------------------
+   Utilidades
+------------------------------------------------------------------ */
+function copy(text, msg) {
+  const done = () => toast(msg || ('Copiado: ' + text));
+  if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done, done);
+  else { const t = document.createElement('textarea'); t.value = text; document.body.appendChild(t); t.select(); try { document.execCommand('copy'); } catch (e) {} t.remove(); done(); }
+}
+let toastT;
+function toast(msg) {
+  $('#toast-msg').textContent = msg;
+  const t = $('#toast'); t.classList.add('show');
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2400);
+}
+const hex2rgb = h => { h = h.replace('#', ''); return [0, 2, 4].map(i => parseInt(h.substr(i, 2), 16)); };
+function rgb2hsl([r, g, b]) {
+  r /= 255; g /= 255; b /= 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b); let h = 0, s = 0; const l = (max + min) / 2;
+  if (max !== min) {
+    const d = max - min; s = l > .5 ? d / (2 - max - min) : d / (max + min);
+    h = max === r ? (g - b) / d + (g < b ? 6 : 0) : max === g ? (b - r) / d + 2 : (r - g) / d + 4; h *= 60;
+  }
+  return [Math.round(h), Math.round(s * 100), Math.round(l * 100)];
+}
+const lum = ([r, g, b]) => { const f = v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }; return .2126 * f(r) + .7152 * f(g) + .0722 * f(b); };
+const contrast = (a, b) => { const A = lum(hex2rgb(a)), B = lum(hex2rgb(b)); return (Math.max(A, B) + .05) / (Math.min(A, B) + .05); };
+const grade = r => r >= 7 ? ['AAA', 'text-ok border-ok/40'] : r >= 4.5 ? ['AA', 'text-ok border-ok/40'] : r >= 3 ? ['AA Large', 'text-warn border-warn/40'] : ['Falha', 'text-danger border-danger/40'];
+
+/* ------------------------------------------------------------------
+   Fundos animados por seção  ( [data-bg="aurora dots embers …"] )
+------------------------------------------------------------------ */
+function spawnEmbers(host, n) {
+  for (let i = 0; i < n; i++) {
+    const s = document.createElement('span'), sz = rand(3, 8);
+    s.className = 'ember-dot';
+    s.style.cssText = `left:${rand(0, 100)}%;width:${sz}px;height:${sz}px;--dx:${rand(-70, 70)}px;animation-duration:${rand(6, 13)}s;animation-delay:${-rand(0, 13)}s`;
+    host.appendChild(s);
+  }
+}
+function buildBackgrounds() {
+  $$('.ds-bg[data-bg]').forEach(host => {
+    host.dataset.bg.split(/\s+/).forEach(k => {
+      const add = (cls, html) => { const d = document.createElement('div'); d.className = cls; if (html) d.innerHTML = html; host.appendChild(d); return d; };
+      if (k === 'aurora') { add('aur a'); add('aur b'); add('aur c'); }
+      else if (k === 'dots') add('bg-dots-anim');
+      else if (k === 'grid') add('bg-grid-anim');
+      else if (k === 'rays') add('bg-rays');
+      else if (k === 'conic') add('bg-conic');
+      else if (k === 'rings') add('bg-rings', '<i></i><i></i><i></i><i></i>');
+      else if (k === 'embers') spawnEmbers(host, 14);
+      else if (k === 'embers-dense') spawnEmbers(host, 34);
+    });
+  });
+}
+
+/* ------------------------------------------------------------------
+   Dados: fontes, escala, cores
+------------------------------------------------------------------ */
+const FONTS = [
+  { name: 'Playfair Display', role: 'Display · títulos h1–h5 · preços', w: '400 – 800 · itálico 400–600', stack: '"Playfair Display", Georgia, "Times New Roman", serif', tw: 'font-serif', ref: 'Balkan Cuisine · ref.webp', ff: "'Playfair Display'", it: false },
+  { name: 'Instrument Serif', role: 'Editorial · palavra em destaque (itálico)', w: '400 · regular + itálico', stack: '"Instrument Serif", "Playfair Display", Georgia, serif', tw: 'font-editorial', ref: 'La Dolce Vita', ff: "'Instrument Serif'", it: true },
+  { name: 'Cormorant Garamond', role: 'Luxo · caixa-alta · acentos finos', w: '300 – 700 · itálico 300–500', stack: '"Cormorant Garamond", "Playfair Display", serif', tw: 'font-display', ref: 'Nereo · Kampai', ff: "'Cormorant Garamond'", it: false },
+  { name: 'Inter', role: 'Corpo · UI · formulários', w: '200 – 700 (corpo usa 300)', stack: '"Inter", system-ui, -apple-system, "Segoe UI", sans-serif', tw: 'font-sans', ref: 'Todas as referências', ff: "'Inter'", it: false },
+  { name: 'Montserrat', role: 'Labels · eyebrows · tracking largo', w: '300 – 700', stack: '"Montserrat", "Inter", sans-serif', tw: 'font-label', ref: 'Nereo', ff: "'Montserrat'", it: false },
+  { name: 'JetBrains Mono', role: 'Tokens · código · valores técnicos', w: '400 · 500', stack: '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace', tw: 'font-mono', ref: 'Extensão do DS (sem mono nas refs)', ff: "'JetBrains Mono'", it: false },
+];
+$('#font-cards').innerHTML = FONTS.map(f => `
+  <div class="spot-card p-7 reveal-up">
+    <div class="flex items-start justify-between mb-5"><span class="t-label text-brasa !text-[10px]">${f.role}</span></div>
+    <div class="text-[6rem] leading-none mb-2 text-cream ${f.it ? 'italic' : ''}" style="font-family:${f.ff},serif;font-weight:${f.name === 'Inter' ? 300 : 500}">Aa</div>
+    <div class="text-2xl mb-1" style="font-family:${f.ff},serif;${f.it ? 'font-style:italic;' : ''}">${f.name}</div>
+    <p class="text-sm text-muted mb-5" style="font-family:${f.ff},serif">Pizza artesanal · 0123456789 · àéîõü</p>
+    <dl class="text-[12px] space-y-2 border-t border-white/10 pt-4">
+      <div class="flex justify-between gap-4"><dt class="text-muted">Pesos</dt><dd class="text-right text-creamDim">${f.w}</dd></div>
+      <div><dt class="text-muted mb-1">Fallback stack</dt><dd class="code !whitespace-normal !text-[10.5px] block leading-relaxed">${f.stack.replace(/"/g, '&quot;')}</dd></div>
+      <div class="flex justify-between gap-4"><dt class="text-muted">Tailwind</dt><dd><span class="code">${f.tw}</span></dd></div>
+      <div class="flex justify-between gap-4"><dt class="text-muted">Origem</dt><dd class="text-right text-creamDim">${f.ref}</dd></div>
+    </dl>
+  </div>`).join('');
+
+const TYPE_ROLES = [
+  ['t-display', 'Display', 'Toda fatia nasce do fogo'], ['t-h1', 'H1', 'Pizza de forno a lenha'], ['t-h2', 'H2', 'Nossas especialidades'],
+  ['t-h3', 'H3', 'Massa de fermentação lenta'], ['t-h4', 'H4', 'Tomate San Marzano'], ['t-h5', 'H5', 'Burrata e manjericão fresco'],
+  ['t-h6', 'H6 · overline', 'Forno a lenha'], ['t-editorial', 'Editorial', 'feito à mão, no fogo'], ['t-lux', 'Luxo · caps', 'Mesa do pizzaiolo'],
+  ['t-body-lg', 'Body LG', 'Massa de 72 horas, tomate San Marzano e um forno que passa dos 450 graus. Tudo para o ponto leopardo perfeito.'],
+  ['t-body', 'Body', 'Massa de 72 horas, tomate San Marzano e um forno que passa dos 450 graus. Tudo para o ponto leopardo perfeito.'],
+  ['t-body-sm', 'Body SM', 'Massa de 72 horas, tomate San Marzano e um forno que passa dos 450 graus.'],
+  ['t-caption', 'Caption', 'Foto ilustrativa · disponível de terça a domingo'], ['t-label', 'Label', 'Reserve uma mesa'],
+  ['t-eyebrow', 'Eyebrow', 'Vem do fogo direto pra mesa'], ['t-helper', 'Helper text', 'Use o CEP sem hífen. Ex.: 01310100'],
+  ['t-price', 'Price', 'R$ 54'], ['t-mono', 'Mono', '--ember: 224 40 58;'],
+];
+$('#type-scale').innerHTML = TYPE_ROLES.map(([c, n, s]) => `
+  <div class="spot-card p-6 md:p-8 reveal-up" data-role="${c}">
+    <div class="grid lg:grid-cols-12 gap-6 items-start">
+      <div class="lg:col-span-2"><div class="t-label text-brasa !text-[10px]">${n}</div><span class="code mt-2 inline-block">.${c}</span></div>
+      <div class="lg:col-span-10 space-y-5"><div class="${c} text-cream break-words ${c === 't-body-lg' || c === 't-body' || c === 't-body-sm' ? 'max-w-2xl' : ''}">${s}</div>
+        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 text-[11px] spec"></div></div>
+    </div>
+  </div>`).join('');
+function fillTypeSpecs() {
+  $$('#type-scale [data-role]').forEach(card => {
+    const cs = getComputedStyle($('.' + card.dataset.role, card)), fs = parseFloat(cs.fontSize);
+    const lh = cs.lineHeight === 'normal' ? 'normal' : `${(parseFloat(cs.lineHeight)).toFixed(1)}px · ${(parseFloat(cs.lineHeight) / fs).toFixed(2)}`;
+    const ls = cs.letterSpacing === 'normal' ? '0' : `${parseFloat(cs.letterSpacing).toFixed(2)}px · ${(parseFloat(cs.letterSpacing) / fs).toFixed(3)}em`;
+    const cell = (k, v) => `<div class="rounded-lg bg-black/25 border border-white/5 px-3 py-2"><div class="text-muted uppercase tracking-widest text-[9px] mb-1">${k}</div><div class="text-creamDim font-mono text-[11px] break-words">${v}</div></div>`;
+    $('.spec', card).innerHTML =
+      cell('font-family', cs.fontFamily.split(',')[0].replace(/["']/g, '')) + cell('font-weight', cs.fontWeight + (cs.fontStyle === 'italic' ? ' italic' : '')) +
+      cell('font-size', `${fs.toFixed(1)}px · ${(fs / 16).toFixed(3)}rem`) + cell('line-height', lh) + cell('letter-spacing', ls) + cell('text-transform', cs.textTransform);
+  });
+}
+fillTypeSpecs(); addEventListener('resize', fillTypeSpecs);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(fillTypeSpecs);
+
+const COLORS = [
+  { g: 'Primário — vermelho fogo', d: 'Marca, CTAs, foco, glow.', items: [
+    { n: 'Ember · fuoco-500', k: 'ember', hex: '#E0283A', role: 'Primary', use: 'CTA, links ativos, foco, seleção, borda de destaque', grad: 'grad-fire (meio) · text-fire' },
+    { n: 'Ember light · fuoco-400', k: 'fuoco-400', hex: '#F85160', role: 'Primary (texto)', use: 'Texto vermelho sobre fundo escuro (contraste AA)', grad: '—' },
+    { n: 'Ember pressed · fuoco-700', k: 'fuoco-700', hex: '#9F1224', role: 'Primary (active)', use: 'Estado pressionado, fim do gradiente de fogo', grad: 'grad-fire (fim)' },
+  ]},
+  { g: 'Secundário — ouro antigo', d: 'Preços, estrelas, selos, ornamentos.', items: [
+    { n: 'Gold', k: 'gold', hex: '#D8A94F', role: 'Secondary', use: 'Preço, estrela, borda ornamental, botão .btn-gold', grad: 'grad-gold' },
+    { n: 'Gold soft', k: 'goldSoft', hex: '#F0D28A', role: 'Secondary (claro)', use: 'Hover de links, brilho do texto dourado', grad: 'text-gold-grad' },
+    { n: 'Gold deep', k: 'goldDeep', hex: '#B9852E', role: 'Secondary (escuro)', use: 'Fim do gradiente dourado, hover profundo', grad: 'grad-gold (fim)' },
+  ]},
+  { g: 'Acento — brasa', d: 'Calor, faíscas, eyebrows.', items: [
+    { n: 'Brasa', k: 'brasa', hex: '#FF6B35', role: 'Accent', use: 'Eyebrows, hover, brasas, início do gradiente de fogo', grad: 'grad-fire (início) · text-fire' },
+  ]},
+  { g: 'Neutros — carvão avermelhado', d: 'Fundos, superfícies e texto.', items: [
+    { n: 'Charcoal', k: 'charcoal', hex: '#0B0607', role: 'Neutral · fundo', use: 'Fundo base (bgPrimary)', grad: 'Vinhetas' },
+    { n: 'Surface', k: 'surface', hex: '#160B0D', role: 'Neutral · superfície', use: 'Seções alternadas, cards (bgSecondary)', grad: 'Vinhetas' },
+    { n: 'Surface 2', k: 'surface2', hex: '#1F1013', role: 'Neutral · elevado', use: 'Cards elevados, drawer, inputs ativos', grad: '—' },
+    { n: 'Cream', k: 'cream', hex: '#F6ECE0', role: 'Neutral · texto', use: 'Texto principal (textPrimary), botão creme', grad: '—' },
+    { n: 'Cream dim', k: 'creamDim', hex: '#D3C4B8', role: 'Neutral · texto 2', use: 'Corpo secundário (textSecondary)', grad: '—' },
+    { n: 'Muted', k: 'muted', hex: '#94827A', role: 'Neutral · apoio', use: 'Helper text, legendas (textMuted)', grad: '—' },
+  ]},
+  { g: 'Feedback', d: 'Sempre acompanhado de ícone e texto.', items: [
+    { n: 'Success', k: 'ok', hex: '#3DBE8B', role: 'Feedback', use: 'Validação, "aberto agora", toast de sucesso', grad: '—' },
+    { n: 'Warning', k: 'warn', hex: '#F5A524', role: 'Feedback', use: 'Em preparo, atenção', grad: '—' },
+    { n: 'Danger', k: 'danger', hex: '#FF4D4D', role: 'Feedback', use: 'Erro de campo, esgotado (nunca no lugar do primário)', grad: '—' },
+    { n: 'Info', k: 'info', hex: '#6AA7FF', role: 'Feedback', use: 'Dicas, tags informativas', grad: '—' },
+  ]},
+  { g: 'Decorativo', d: 'Atmosfera — nunca carregam informação.', items: [
+    { n: 'Wine', k: 'wine', hex: '#7A0F1C', role: 'Decorative', use: 'Mancha aurora, faixa marquee, vinheta quente', grad: 'aurora · marquee' },
+    { n: 'Basil', k: 'basil', hex: '#4E9F5D', role: 'Decorative', use: 'Manjericão, tags veganas', grad: '—' },
+  ]},
+];
+const RAMP = [['50', '#FFF1F1'], ['100', '#FFDCDD'], ['200', '#FFB9BD'], ['300', '#FF8790'], ['400', '#F85160'], ['500', '#E0283A'], ['600', '#C2182B'], ['700', '#9F1224'], ['800', '#7A0F1C'], ['900', '#4D0912'], ['950', '#2A050A']];
+$('#ramp').innerHTML = RAMP.map(([s, h]) => `<button class="group relative h-32 flex flex-col justify-end p-3 text-left transition-all duration-500 hover:h-40 hover:z-10" style="background:${h};color:${lum(hex2rgb(h)) > .3 ? '#1a0d0f' : '#fff'}" data-copy="${h}"><span class="font-serif text-xl leading-none">${s}</span><span class="font-mono text-[10px] opacity-80 mt-1">${h}</span>${s === '500' ? '<span class="absolute top-2 left-3 text-[9px] uppercase tracking-widest font-semibold">Primary</span>' : ''}</button>`).join('');
+
+$('#swatches').innerHTML = COLORS.map(grp => `
+  <div>
+    <div class="flex items-baseline gap-4 mb-5 reveal-up"><h4 class="font-serif text-2xl">${grp.g}</h4><span class="t-helper text-muted">${grp.d}</span></div>
+    <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+      ${grp.items.map(c => {
+        const rgb = hex2rgb(c.hex), hsl = rgb2hsl(rgb), cc = contrast(c.hex, '#0B0607'), cw = contrast(c.hex, '#F6ECE0'), g1 = grade(cc), g2 = grade(cw);
+        return `<div class="spot-card overflow-hidden reveal-up cursor-pointer" data-copy="${c.hex}">
+          <div class="relative h-32 flex items-end justify-between p-5" style="background:${c.hex};color:${lum(rgb) > .3 ? '#1a0d0f' : '#fff'}"><span class="font-serif text-xl">${c.n}</span><span class="text-[10px] uppercase tracking-widest opacity-80">${c.role}</span></div>
+          <div class="p-5 space-y-4">
+            <div class="grid grid-cols-1 gap-1.5 font-mono text-[11px]">
+              <div class="flex justify-between"><span class="text-muted">HEX</span><span class="text-cream">${c.hex}</span></div>
+              <div class="flex justify-between"><span class="text-muted">RGB</span><span class="text-cream">${rgb.join(', ')}</span></div>
+              <div class="flex justify-between"><span class="text-muted">HSL</span><span class="text-cream">${hsl[0]}°, ${hsl[1]}%, ${hsl[2]}%</span></div>
+              <div class="flex justify-between"><span class="text-muted">Tailwind</span><span class="text-cream">bg-${c.k} · text-${c.k}</span></div>
+            </div>
+            <div><div class="text-[9px] uppercase tracking-widest text-muted mb-2">Opacidade 100 · 80 · 60 · 40 · 20 · 10 · 5 %</div>
+              <div class="flex h-8 rounded-lg overflow-hidden border border-white/10" style="background:repeating-conic-gradient(#1b1011 0 25%,#0b0607 0 50%) 0 0/10px 10px">${[1, .8, .6, .4, .2, .1, .05].map(a => `<i class="flex-1" style="background:rgba(${rgb.join(',')},${a})"></i>`).join('')}</div></div>
+            <div class="flex flex-wrap gap-2 text-[10px]">
+              <span class="badge badge-ghost !normal-case !tracking-normal !text-[10px] ${g1[1]}">vs charcoal ${cc.toFixed(1)}:1 · ${g1[0]}</span>
+              <span class="badge badge-ghost !normal-case !tracking-normal !text-[10px] ${g2[1]}">vs cream ${cw.toFixed(1)}:1 · ${g2[0]}</span>
+            </div>
+            <p class="text-[12px] text-creamDim leading-relaxed">${c.use}</p>
+            <p class="text-[11px] text-muted"><b class="font-medium text-creamDim">Gradiente:</b> ${c.grad}</p>
+          </div></div>`; }).join('')}
+    </div>
+  </div>`).join('');
+
+const GRADS = [
+  ['grad-fire', 'linear-gradient(120deg,#FF6B35 0%,#E0283A 55%,#9F1224 100%)', 'Botões primários, faixas de destaque, barras de progresso'],
+  ['text-fire', 'linear-gradient(100deg,#FFB27A,#FF6B35,#E0283A,#FF6B35,#FFB27A)', 'Palavra em destaque no título (animado, 220 % de largura)'],
+  ['grad-gold', 'linear-gradient(90deg,#E4B760,#B9852E)', 'Botão ouro, ornamentos, selos'],
+  ['aurora', 'radial-gradient(circle at 20% 20%,#E0283A,transparent 60%), radial-gradient(circle at 80% 40%,#FF6B35,transparent 55%), radial-gradient(circle at 50% 100%,#7A0F1C,transparent 65%)', 'Fundos de seção com blur 110 px (mix-blend screen), animados'],
+  ['marquee', 'linear-gradient(90deg,#7A0F1C,#E0283A,#7A0F1C)', 'Faixa marquee entre hero e conteúdo'],
+  ['glow-border', 'conic-gradient(from var(--angle),transparent 0 60%,#FF6B35 78%,#E0283A 88%,transparent)', 'Borda de luz rotativa (@property --angle)'],
+];
+$('#gradients').innerHTML = GRADS.map(([n, g, u]) => `<div class="spot-card overflow-hidden reveal-up cursor-pointer" data-copy="${g.replace(/"/g, '&quot;')}" data-copymsg="Gradiente copiado"><div class="h-28" style="background:${g}"></div><div class="p-5"><div class="font-serif text-lg mb-1">${n}</div><p class="text-[12px] text-creamDim mb-3">${u}</p><code class="code !whitespace-normal !text-[10px] block leading-relaxed break-all">${g}</code></div></div>`).join('');
+
+const PAIRS = [
+  ['Cream / Charcoal', '#F6ECE0', '#0B0607', 'Texto principal'], ['Cream dim / Charcoal', '#D3C4B8', '#0B0607', 'Corpo secundário'], ['Muted / Charcoal', '#94827A', '#0B0607', 'Helper text'],
+  ['Ember / Charcoal', '#E0283A', '#0B0607', 'Só texto grande/ícones'], ['Ember light / Charcoal', '#F85160', '#0B0607', 'Texto vermelho seguro'], ['Brasa / Charcoal', '#FF6B35', '#0B0607', 'Eyebrows'],
+  ['#fff / Ember', '#FFFFFF', '#E0283A', 'Texto do botão fire'], ['Gold / Charcoal', '#D8A94F', '#0B0607', 'Preços, estrelas'], ['Charcoal / Gold', '#0B0607', '#D8A94F', 'Botão ouro (hover)'],
+  ['Cream / Wine', '#F6ECE0', '#7A0F1C', 'Faixa marquee'], ['Success / Surface', '#3DBE8B', '#160B0D', 'Status'], ['Danger / Surface', '#FF4D4D', '#160B0D', 'Erros'],
+  ['Warning / Surface', '#F5A524', '#160B0D', 'Alertas'], ['Info / Surface', '#6AA7FF', '#160B0D', 'Dicas'], ['#1A0D0F / #FBF5EC', '#1A0D0F', '#FBF5EC', 'Light card'], ['Muted / Surface', '#94827A', '#160B0D', 'Legendas em cards'],
+];
+$('#contrast-matrix').innerHTML = PAIRS.map(([n, fg, bg, u]) => { const r = contrast(fg, bg), g = grade(r); return `<div class="rounded-2xl p-5 border border-white/10 reveal-up" style="background:${bg}"><div class="font-serif text-2xl mb-1" style="color:${fg}">Aa Pizza</div><div class="text-[11px] mb-3" style="color:${fg};opacity:.8">${n}</div><div class="flex items-center justify-between text-[10px]"><span class="font-mono" style="color:${fg}">${r.toFixed(2)}:1</span><span class="badge !text-[9px] px-2 py-1 border bg-black/50 ${g[1]}">${g[0]}</span></div><div class="text-[10px] mt-2" style="color:${fg};opacity:.6">${u}</div></div>`; }).join('');
+
+document.addEventListener('click', e => { const el = e.target.closest('[data-copy]'); if (el) copy(el.dataset.copy, el.dataset.copymsg); });
+
+/* ------------------------------------------------------------------
+   Cardápio em abas (Balkan) — .menu-tab / .menu-item
+------------------------------------------------------------------ */
+const MENU = {
+  pizza: [['101', 'Margherita Brasa', 'R$ 54', 'Fior di latte, San Marzano, manjericão e azeite extra virgem'], ['102', 'Diavola', 'R$ 62', 'Salame picante, pimenta calabresa e mel de pimenta'], ['103', 'Burrata & Pistache', 'R$ 74', 'Burrata fresca, pesto de pistache e mortadela', 'Casa recomenda', 'hot'], ['104', 'Marinara', 'R$ 44', 'Alho, orégano, tomate e azeite — sem queijo', 'Vegana', 'ghost'], ['105', 'Quattro Formaggi', 'R$ 68', 'Mozzarella, gorgonzola, parmesão e provolone'], ['106', 'Rodízio da Brasa (4 pessoas)', 'R$ 189', 'Seis sabores, bebida e sobremesa', 'Para grupos', 'ghost']],
+  massa: [['201', 'Tagliatelle al Tartufo', 'R$ 68', 'Trufa negra, creme de parmesão e cebolinha', 'Casa recomenda', 'hot'], ['202', 'Penne ao Sugo', 'R$ 46', 'Molho de tomate assado e manjericão'], ['203', 'Lasanha da Nonna', 'R$ 58', 'Sete camadas, ragu de cocção lenta']],
+  bebida: [['301', 'Negroni Defumado', 'R$ 32', 'Gin, Campari, vermute e fumaça de lenha', 'Casa recomenda', 'hot'], ['302', 'Chianti Classico (taça)', 'R$ 38', 'Sangiovese · Toscana'], ['303', 'Limonata Siciliana', 'R$ 18', 'Limão-siciliano e hortelã', 'Sem álcool', 'ghost']],
+  doce: [['401', 'Tiramisù Classico', 'R$ 28', 'Mascarpone, café e cacau'], ['402', 'Pizza Nutella & Morango', 'R$ 42', 'Pizzetta doce assada no forno', 'Casa recomenda', 'hot'], ['403', 'Panna Cotta', 'R$ 26', 'Calda de frutas vermelhas']],
+};
+function renderMenu(k) {
+  $('#menu-grid').innerHTML = MENU[k].map(([n, t, p, d, tag, kind]) => `
+    <div class="menu-item bg-charcoal rounded-2xl p-6 border ${kind === 'hot' ? 'border-ember/40 shadow-glow' : 'border-ember/20'} hover:border-ember/50 hover:-translate-y-1 transition-all duration-300 relative group">
+      ${tag ? `<span class="badge ${kind === 'hot' ? 'badge-solid' : 'badge-ghost'} absolute -top-3 right-4">${tag}</span>` : `<span class="badge badge-num absolute top-4 left-4">${n}</span>`}
+      <div class="${tag ? 'mt-3' : 'mt-8'} flex justify-between items-start gap-4 mb-2"><h4 class="font-serif text-lg tracking-tight leading-snug ${kind === 'hot' ? 'text-goldSoft' : ''}">${t}</h4><span class="text-brasa font-medium whitespace-nowrap">${p}</span></div>
+      <p class="text-sm text-cream/60 font-light">${d}</p></div>`).join('');
+}
+renderMenu('pizza');
+$('#menu-tabs').addEventListener('click', e => { const b = e.target.closest('.menu-tab'); if (!b) return; $$('.menu-tab').forEach(t => t.classList.remove('active')); b.classList.add('active'); renderMenu(b.dataset.target); });
+
+/* ------------------------------------------------------------------
+   Padrões de seção + ícones
+------------------------------------------------------------------ */
+const i_ = c => `<i class="block ${c}"></i>`;
+const PATTERNS = [
+  ['Hero', 'Balkan · Nereo · ref.webp', `<div class="h-full flex gap-2 p-3"><div class="flex-1 space-y-1.5 pt-2">${i_('h-1 w-6 bg-ember')}${i_('h-3 w-4/5 bg-cream/70 rounded-sm')}${i_('h-3 w-3/5 bg-brasa/80 rounded-sm')}${i_('h-1 w-4/5 bg-cream/20')}${i_('h-4 w-14 rounded-full bg-ember')}</div>${i_('w-16 h-16 self-center rounded-full bg-gradient-to-br from-brasa to-wine')}</div>`, 'min-h-screen · aurora + conic + embers + steam'],
+  ['Bento', 'La Dolce Vita', `<div class="h-full grid grid-cols-3 grid-rows-2 gap-1.5 p-3">${i_('col-span-2 row-span-2 rounded bg-gradient-to-br from-ember/60 to-wine')}${i_('rounded bg-gold/40')}${i_('rounded bg-cream/20')}</div>`, 'grid md:grid-cols-3 · auto-rows-[340px]'],
+  ['Split / Sobre', 'Balkan', `<div class="h-full flex gap-3 p-3 items-center">${i_('w-1/2 h-full rounded border border-ember/60 bg-surface2')}<div class="flex-1 space-y-1.5">${i_('h-2 w-full bg-cream/60 rounded-sm')}${i_('h-2 w-2/3 bg-brasa/70 rounded-sm')}${i_('h-1 w-full bg-cream/20')}${i_('h-1 w-4/5 bg-cream/20')}</div></div>`, 'moldura -rotate-2 · selo flutuante'],
+  ['Menu em abas', 'Balkan', `<div class="h-full p-3 space-y-2"><div class="flex gap-1 justify-center">${i_('h-2 w-8 rounded-full bg-ember')}${i_('h-2 w-8 rounded-full bg-cream/20')}${i_('h-2 w-8 rounded-full bg-cream/20')}</div><div class="grid grid-cols-3 gap-1.5">${i_('h-10 rounded border border-ember/40')}${i_('h-10 rounded border border-ember/40')}${i_('h-10 rounded border border-ember/40')}</div></div>`, '.menu-tab · .menu-item · dots bg'],
+  ['Scroll horizontal', 'Kampai', `<div class="h-full flex gap-2 p-3 pr-0 items-center overflow-hidden">${[0, 1, 2, 3].map(() => i_('flex-none w-16 h-16 rounded bg-gradient-to-br from-surface2 to-ember/50')).join('')}</div>`, '.menu-scroll-container · snap-x'],
+  ['Depoimentos', 'Nereo · ref.webp', `<div class="h-full p-3 grid grid-cols-3 gap-1.5">${[0, 1, 2].map(() => `<div class="rounded bg-surface2 p-1.5 space-y-1">${i_('h-1 w-full bg-gold/70')}${i_('h-1 w-full bg-cream/20')}${i_('h-1 w-2/3 bg-cream/20')}</div>`).join('')}</div>`, 'cross-fade 4 s · estrelas ouro'],
+  ['Reserva', 'Nereo · ref.webp', `<div class="h-full flex gap-2 p-3">${i_('flex-1 rounded bg-gradient-to-br from-wine to-ember/50')}<div class="w-1/2 rounded bg-cream/90 p-2 space-y-1.5">${i_('h-1.5 w-full bg-charcoal/20 rounded')}${i_('h-1.5 w-full bg-charcoal/20 rounded')}${i_('h-3 w-full bg-ember rounded')}</div></div>`, 'glass-card · .light-card form'],
+  ['CTA + Footer', 'ref.webp', `<div class="h-full flex flex-col gap-1.5 p-3"><div class="flex-1 rounded bg-gradient-to-t from-ember/60 to-surface2 flex items-center justify-center">${i_('h-3 w-16 rounded-full bg-cream/80')}</div><div class="flex gap-2">${i_('h-3 flex-1 bg-cream/15')}${i_('h-3 flex-1 bg-cream/15')}${i_('h-3 flex-1 bg-cream/15')}</div></div>`, 'foto ken burns + gradiente + vapor'],
+];
+$('#section-patterns').innerHTML = PATTERNS.map(([n, r, w, fx]) => `<div class="spot-card p-5 reveal-up"><div class="h-28 rounded-xl bg-black/40 border border-white/5 overflow-hidden mb-4">${w}</div><div class="font-serif text-lg">${n}</div><div class="t-label text-brasa !text-[9px] !tracking-[.2em] mt-1">${r}</div><p class="t-helper text-muted mt-3">${fx}</p></div>`).join('');
+
+const SOLAR = ['fire-linear', 'chef-hat-linear', 'medal-star-linear', 'star-bold', 'star-linear', 'heart-linear', 'heart-bold', 'cart-large-linear', 'bag-linear', 'delivery-linear', 'map-point-linear', 'phone-linear', 'letter-linear', 'clock-circle-linear', 'calendar-linear', 'user-linear', 'magnifer-linear', 'bell-linear', 'check-circle-linear', 'danger-triangle-linear', 'info-circle-linear', 'close-circle-linear', 'hamburger-menu-linear', 'home-2-linear', 'wineglass-linear', 'cup-hot-linear', 'gift-linear', 'tag-price-linear', 'share-linear', 'eye-linear', 'settings-linear', 'play-circle-linear', 'wallet-linear', 'card-linear', 'verified-check-linear', 'shield-check-linear', 'leaf-linear', 'sun-linear', 'moon-linear', 'users-group-rounded-linear', 'ticket-linear', 'bottle-linear', 'filter-linear', 'bolt-linear', 'crown-linear', 'magic-stick-3-linear', 'arrow-right-linear', 'arrow-right-up-linear', 'arrow-left-linear', 'alt-arrow-down-linear', 'add-circle-linear', 'minus-circle-linear', 'copy-linear', 'download-linear', 'lock-linear', 'palette-round-linear', 'star-fall-linear', 'bill-list-linear', 'people-nearby-linear', 'phone-calling-linear'];
+$('#icons-solar').innerHTML = SOLAR.map(n => `<button class="group aspect-square rounded-xl border border-white/8 bg-white/[.03] flex flex-col items-center justify-center gap-1.5 hover:border-ember hover:bg-ember/10 hover:-translate-y-1 transition-all duration-300" data-copy='<iconify-icon icon="solar:${n}"></iconify-icon>' data-copymsg="solar:${n}" title="solar:${n}"><iconify-icon icon="solar:${n}" class="text-2xl text-creamDim group-hover:text-brasa transition-colors"></iconify-icon><span class="text-[8px] text-muted truncate max-w-full px-1">${n.replace('-linear', '')}</span></button>`).join('');
+const LUCIDE = ['flame', 'pizza', 'chef-hat', 'utensils', 'wine', 'beer', 'cake-slice', 'salad', 'soup', 'wheat', 'leaf', 'thermometer', 'timer', 'award', 'star', 'heart', 'shopping-bag', 'truck', 'bike', 'map-pin', 'phone', 'mail', 'clock', 'calendar', 'gift', 'percent', 'badge-check', 'sparkles', 'quote', 'menu', 'chevron-down', 'arrow-right', 'shrub', 'book-open', 'users', 'search'];
+$('#icons-lucide').innerHTML = LUCIDE.map(n => `<button class="group aspect-square rounded-xl border border-white/8 bg-white/[.03] flex flex-col items-center justify-center gap-1.5 hover:border-ember hover:bg-ember/10 hover:-translate-y-1 transition-all duration-300" data-copy='<i data-lucide="${n}"></i>' data-copymsg="lucide:${n}" title="lucide:${n}"><i data-lucide="${n}" class="w-5 h-5 text-creamDim group-hover:text-brasa transition-colors"></i></button>`).join('');
+if (window.lucide) lucide.createIcons();
+
+/* ------------------------------------------------------------------
+   Marquee (duplicação para loop contínuo)
+------------------------------------------------------------------ */
+(() => {
+  const m = $('[data-marquee]'); if (!m) return; const html = m.innerHTML;
+  m.innerHTML = html + html; const track = m.parentElement;
+  const twin = m.cloneNode(true); twin.removeAttribute('data-marquee'); track.appendChild(twin);
+})();
+
+/* ------------------------------------------------------------------
+   Interações de UI
+------------------------------------------------------------------ */
+// ripple
+document.addEventListener('pointerdown', e => {
+  const b = e.target.closest('[data-ripple]'); if (!b) return;
+  const r = b.getBoundingClientRect(), s = Math.max(r.width, r.height), sp = document.createElement('span');
+  sp.className = 'ripple'; sp.style.cssText = `width:${s}px;height:${s}px;left:${e.clientX - r.left - s / 2}px;top:${e.clientY - r.top - s / 2}px`;
+  b.appendChild(sp); setTimeout(() => sp.remove(), 750);
+});
+// loop de suavização para translate (magnético + parallax)
+const smooth = new Map();
+function smoothTo(el, x, y, k = .14) { let s = smooth.get(el); if (!s) { s = { x: 0, y: 0, tx: 0, ty: 0, k }; smooth.set(el, s); } s.tx = x; s.ty = y; s.k = k; }
+(function loop() {
+  smooth.forEach((s, el) => { s.x += (s.tx - s.x) * s.k; s.y += (s.ty - s.y) * s.k; el.style.translate = `${s.x.toFixed(2)}px ${s.y.toFixed(2)}px`; });
+  requestAnimationFrame(loop);
+})();
+$$('[data-magnetic]').forEach(el => {
+  el.addEventListener('pointermove', e => { const r = el.getBoundingClientRect(); smoothTo(el, (e.clientX - r.left - r.width / 2) * .3, (e.clientY - r.top - r.height / 2) * .4, .2); });
+  el.addEventListener('pointerleave', () => smoothTo(el, 0, 0, .12));
+});
+// spotlight + tilt
+$$('.spot-card').forEach(c => {
+  c.addEventListener('pointermove', e => {
+    const r = c.getBoundingClientRect(); c.style.setProperty('--mx', (e.clientX - r.left) + 'px'); c.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    if (c.hasAttribute('data-tilt') && !reduce) { const px = (e.clientX - r.left) / r.width - .5, py = (e.clientY - r.top) / r.height - .5; c.style.transform = `perspective(900px) rotateY(${px * 10}deg) rotateX(${-py * 10}deg) translateY(-6px)`; }
+  });
+  c.addEventListener('pointerleave', () => { if (c.hasAttribute('data-tilt')) c.style.transform = ''; });
+});
+// switches, stepper, range
+$$('.switch').forEach(s => s.addEventListener('click', () => s.setAttribute('aria-checked', s.getAttribute('aria-checked') !== 'true')));
+$('.stepper').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; const q = $('#qty'); q.textContent = Math.max(1, +q.textContent + (b.textContent.trim() === '+' ? 1 : -1)); });
+const rg = $('#range'); const upd = () => { const v = (rg.value - rg.min) / (rg.max - rg.min) * 100; rg.style.setProperty('--v', v + '%'); $('#range-val').textContent = rg.value + '°C'; }; rg.addEventListener('input', upd); upd();
+// botão loading
+$('#btn-load').addEventListener('click', function () { this.classList.add('is-loading'); setTimeout(() => { this.classList.remove('is-loading'); toast('Pedido enviado!'); }, 1800); });
+// navbar demos
+$('#nav-sim').addEventListener('click', () => { const on = $('#nav-sim').getAttribute('aria-checked') === 'true', n = $('#nav-demo-a'); n.classList.toggle('bg-charcoal', on); n.classList.toggle('border-ember/40', on); n.classList.toggle('shadow-lg', on); n.classList.toggle('bg-gradient-to-b', !on); n.classList.toggle('border-transparent', !on); });
+$('#drawer-demo-btn').addEventListener('click', function () { const d = $('#drawer-demo'), open = d.classList.toggle('translate-x-full') === false; this.textContent = open ? 'Fechar' : 'Abrir'; });
+// forms
+$('#res-form').addEventListener('submit', e => { e.preventDefault(); toast('Reserva confirmada 🔥'); });
+$('#modal-form').addEventListener('submit', e => { e.preventDefault(); $('#mr-form').classList.add('hidden'); $('#mr-ok').classList.remove('hidden'); });
+// depoimentos
+(() => { const s = $$('.testi-slide'); let i = 0; setInterval(() => { s[i].classList.replace('opacity-100', 'opacity-0'); i = (i + 1) % s.length; s[i].classList.replace('opacity-0', 'opacity-100'); }, 4200); })();
+
+/* modais */
+let lastFocus = null;
+function openModal(id) {
+  const m = document.getElementById(id); if (!m) return; lastFocus = document.activeElement;
+  if (id === 'modal-res') { $('#mr-form').classList.remove('hidden'); $('#mr-ok').classList.add('hidden'); }
+  m.classList.add('open'); requestAnimationFrame(() => requestAnimationFrame(() => m.classList.add('show')));
+  lenis && lenis.stop(); document.body.style.overflow = 'hidden';
+  setTimeout(() => { const f = $('input,button[data-close],button', m); f && f.focus({ preventScroll: true }); }, 350);
+}
+function closeModal(m) { m.classList.remove('show'); setTimeout(() => { m.classList.remove('open'); lenis && lenis.start(); document.body.style.overflow = ''; lastFocus && lastFocus.focus && lastFocus.focus({ preventScroll: true }); }, 400); }
+document.addEventListener('click', e => {
+  const o = e.target.closest('[data-open]'); if (o) { openModal(o.dataset.open); return; }
+  const c = e.target.closest('[data-close]'); if (c) { const m = c.closest('.modal-backdrop'); if (c.dataset.toast) toast(c.dataset.toast); closeModal(m); return; }
+  if (e.target.classList.contains('modal-backdrop')) closeModal(e.target);
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $$('.modal-backdrop.open').forEach(closeModal); });
+// cookie
+const cookie = $('#cookie'); const cookieShow = v => { cookie.classList.toggle('translate-y-10', !v); cookie.classList.toggle('opacity-0', !v); cookie.classList.toggle('pointer-events-none', !v); };
+$('#open-cookie').addEventListener('click', () => { cookieShow(true); toast('Banner de cookies exibido'); });
+$('#cookie-ok').addEventListener('click', () => { cookieShow(false); toast('Preferências salvas'); }); $('#cookie-no').addEventListener('click', () => cookieShow(false));
+
+/* contadores */
+function countTo(el) {
+  const end = +el.dataset.count, suf = el.dataset.suffix || '', o = { v: 0 };
+  const fmt = v => (Math.round(v)).toLocaleString('pt-BR') + suf;
+  if (!hasGsap || reduce) { el.textContent = fmt(end); return; }
+  gsap.to(o, { v: end, duration: 2.2, ease: 'power2.out', onUpdate: () => el.textContent = fmt(o.v) });
+}
+const cio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { countTo(e.target); cio.unobserve(e.target); } }), { threshold: .5 });
+$$('[data-count]').forEach(el => cio.observe(el));
+
+/* replays das demos de animação */
+$$('[data-replay]').forEach(b => b.addEventListener('click', () => {
+  const k = b.dataset.replay;
+  if (k === 'fade') { const d = $('#demo-fade'); d.classList.remove('visible'); void d.offsetWidth; setTimeout(() => d.classList.add('visible'), 60); }
+  if (k === 'mask' && hasGsap) gsap.fromTo('.mk', { yPercent: 115 }, { yPercent: 0, duration: 1.1, ease: 'power4.out', stagger: .12 });
+  if (k === 'stagger' && hasGsap) gsap.fromTo('.stg', { y: 40, opacity: 0, scale: .7 }, { y: 0, opacity: 1, scale: 1, duration: 1, ease: 'back.out(1.8)', stagger: .1 });
+  if (k === 'count') countTo($('#demo-count'));
+}));
+
+/* fade-up (IntersectionObserver — Balkan) */
+const fio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); fio.unobserve(e.target); } }), { threshold: .1 });
+$$('.fade-up').forEach(el => fio.observe(el));
+
+buildBackgrounds();
+
+/* ------------------------------------------------------------------
+   Navbar principal, menu mobile, scroll-spy, progresso
+------------------------------------------------------------------ */
+const nav = $('#navbar'); let lastY = 0, navHidden = false;
+function onScroll(y) {
+  const solid = y > 50;
+  nav.classList.toggle('nav-glass', solid); nav.classList.toggle('!border-ember/30', solid);
+  if (!navHidden && y > lastY && y > 300) { navHidden = true; nav.style.transform = 'translateY(-100%)'; }
+  else if (navHidden && (y < lastY || y < 300)) { navHidden = false; nav.style.transform = 'translateY(0)'; }
+  lastY = y;
+  const h = document.documentElement.scrollHeight - innerHeight; $('#progress').style.transform = `scaleX(${h > 0 ? y / h : 0})`;
+}
+addEventListener('scroll', () => onScroll(scrollY), { passive: true });
+const mm = $('#mobile-menu'); let mo = false;
+function toggleMenu() { mo = !mo; mm.classList.toggle('translate-x-full', !mo); document.body.style.overflow = mo ? 'hidden' : ''; $('#mobile-menu-btn').innerHTML = `<iconify-icon class="text-2xl ${mo ? 'text-brasa' : ''}" icon="solar:${mo ? 'close-circle-linear' : 'hamburger-menu-linear'}"></iconify-icon>`; }
+$('#mobile-menu-btn').addEventListener('click', toggleMenu);
+$$('.mobile-link').forEach(l => l.addEventListener('click', toggleMenu));
+const links = $$('#navbar .side-link'); const secs = links.map(l => $(l.getAttribute('href')));
+const spy = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) links.forEach((l, i) => l.classList.toggle('active', secs[i] === e.target)); }), { rootMargin: '-40% 0px -55% 0px' });
+secs.forEach(s => s && spy.observe(s));
+// âncoras suaves
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[href^="#"]'); if (!a || a.getAttribute('href') === '#') return;
+  const t = $(a.getAttribute('href')); if (!t) return; e.preventDefault();
+  lenis ? lenis.scrollTo(t, { offset: -70, duration: 1.4 }) : t.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+});
+// brilho do cursor
+const cg = $('#cursor-glow'); let cx = innerWidth / 2, cy = innerHeight / 2, gx = cx, gy = cy;
+addEventListener('pointermove', e => { cx = e.clientX; cy = e.clientY; }, { passive: true });
+(function glow() { gx += (cx - gx) * .08; gy += (cy - gy) * .08; cg.style.transform = `translate(${gx}px,${gy}px)`; requestAnimationFrame(glow); })();
+
+/* ------------------------------------------------------------------
+   HERO — canvas de brasas + parallax do mouse
+------------------------------------------------------------------ */
+const hero = $('#hero'), cv = $('#hero-fire'), ctx = cv.getContext('2d');
+let W = 0, H = 0, dpr = 1, parts = [], heroVisible = true, mouse = { x: -999, y: -999, on: false };
+function sizeCanvas() { dpr = Math.min(devicePixelRatio || 1, 2); W = hero.clientWidth; H = hero.clientHeight; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
+sizeCanvas(); addEventListener('resize', sizeCanvas);
+const mk = (burst) => ({ x: burst ? mouse.x + rand(-12, 12) : rand(0, W), y: burst ? mouse.y + rand(-8, 8) : H + rand(0, 40), vx: rand(-.3, .3) + (burst ? rand(-1, 1) : 0), vy: -rand(.4, 1.5) - (burst ? rand(.4, 1.2) : 0), r: rand(1, 3.4), life: 0, max: rand(180, 420), ph: rand(0, 6.28), hue: rand(6, 30) });
+for (let i = 0; i < (innerWidth < 700 ? 14 : 26); i++) { const p = mk(); p.y = rand(0, H); p.life = rand(0, p.max); parts.push(p); }
+new IntersectionObserver(es => heroVisible = es[0].isIntersecting).observe(hero);
+hero.addEventListener('pointermove', e => { const r = hero.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; mouse.on = true;  });
+hero.addEventListener('pointerleave', () => mouse.on = false);
+function draw() {
+  requestAnimationFrame(draw); if (!heroVisible || reduce) return;
+  ctx.clearRect(0, 0, W, H); ctx.globalCompositeOperation = 'lighter';
+  for (let i = parts.length - 1; i >= 0; i--) {
+    const p = parts[i]; p.life++; p.ph += .03; p.x += p.vx + Math.sin(p.ph) * .35; p.y += p.vy;
+    if (p.life > p.max || p.y < -20) { if (parts.length > 20) { parts.splice(i, 1); continue; } Object.assign(p, mk()); }
+    const t = p.life / p.max, a = t < .1 ? t / .1 : 1 - (t - .1) / .9, rr = p.r * (1 + (1 - t) * 1.6) * 3.2;
+    const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, rr);
+    g.addColorStop(0, `hsla(${p.hue + 14},100%,72%,${a * .95})`); g.addColorStop(.35, `hsla(${p.hue},100%,55%,${a * .5})`); g.addColorStop(1, `hsla(${p.hue - 6},100%,40%,0)`);
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, rr, 0, 6.283); ctx.fill();
+  }
+  ctx.globalCompositeOperation = 'source-over';
+}
+draw();
+// parallax
+const chips = $$('.hero-chip'), plate = $('#hero-plate');
+hero.addEventListener('pointermove', e => {
+  if (reduce) return; const r = hero.getBoundingClientRect(), nx = (e.clientX - r.left) / r.width - .5, ny = (e.clientY - r.top) / r.height - .5;
+  chips.forEach(c => { const d = +c.dataset.depth || 12; smoothTo(c, nx * d * 2, ny * d * 2, .08); });
+  smoothTo(plate, nx * -18, ny * -18, .06); 
+});
+hero.addEventListener('pointerleave', () => { chips.forEach(c => smoothTo(c, 0, 0, .06)); smoothTo(plate, 0, 0, .06);  });
+
+/* ------------------------------------------------------------------
+   GSAP: Lenis, entrada do hero, reveals, parallax
+------------------------------------------------------------------ */
+function revealNow() { $$('.reveal-up,.reveal-scale,.reveal-on-scroll').forEach(el => el.classList.add('revealed')); }
+if (hasGsap && window.ScrollTrigger) {
+  gsap.registerPlugin(ScrollTrigger);
+  if (window.Lenis && !reduce) {
+    lenis = new Lenis({ duration: 1.15, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
+    lenis.on('scroll', ScrollTrigger.update); gsap.ticker.add(t => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0);
+    lenis.on('scroll', e => onScroll(e.scroll));
+  }
+  // estados iniciais do hero (antes do preloader sair)
+  if (!reduce) {
+    gsap.set('#hero-eyebrow > *', { y: 20, opacity: 0 });
+    gsap.set('.hl', { yPercent: 118 });
+    gsap.set('#hero-divider', { scaleX: 0 });
+    gsap.set(['#hero-desc', '#hero-ctas > *', '#hero-badges > *'], { y: 30, opacity: 0 });
+    gsap.set('#hero-plate', { scale: .55, rotate: -30, opacity: 0 });
+    chips.forEach(c => c.classList.contains('anim-float') ? gsap.set(c, { opacity: 0 }) : gsap.set(c, { opacity: 0, y: 40, scale: .85 }));
+  }
+  // reveals de rolagem
+  $$('.reveal-up,.reveal-scale,.reveal-on-scroll').forEach(el => {
+    const scale = el.classList.contains('reveal-scale');
+    ScrollTrigger.create({ trigger: el, start: 'top 90%', once: true, onEnter: () => gsap.to(el, { y: 0, scale: 1, opacity: 1, duration: 1.2, ease: 'power3.out', onComplete: () => { el.classList.add('revealed'); gsap.set(el, { clearProps: 'all' }); } }) });
+    if (scale) gsap.set(el, { scale: .95 });
+  });
+  // parallax do hero ao rolar
+  gsap.to('#hero-visual', { yPercent: -12, ease: 'none', scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true } });
+  addEventListener('load', () => ScrollTrigger.refresh());
+} else revealNow();
+
+function heroIntro() {
+  if (!hasGsap || reduce) return;
+  const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+  tl.to('#hero-eyebrow > *', { y: 0, opacity: 1, duration: .9, stagger: .12 }, 0)
+    .to('.hl', { yPercent: 0, duration: 1.3, ease: 'power4.out', stagger: .16 }, .1)
+    .to('#hero-divider', { scaleX: 1, duration: 1, ease: 'power2.inOut' }, .6)
+    .to('#hero-desc', { y: 0, opacity: 1, duration: 1 }, .75)
+    .to('#hero-ctas > *', { y: 0, opacity: 1, duration: 1, stagger: .12 }, .9)
+    .to('#hero-badges > *', { y: 0, opacity: 1, duration: 1, stagger: .12 }, 1.05)
+    .to('#hero-plate', { scale: 1, rotate: 0, opacity: 1, duration: 1.8, ease: 'expo.out' }, .2);
+  chips.forEach((c, i) => tl.to(c, c.classList.contains('anim-float') ? { opacity: 1, duration: 1 } : { opacity: 1, y: 0, scale: 1, duration: 1.1, ease: 'back.out(1.6)' }, .8 + i * .12));
+}
+
+/* preloader */
+function finishPreloader() {
+  const p = $('#preloader'); if (!p || p.dataset.done) return; p.dataset.done = 1;
+  const out = () => { p.style.display = 'none'; heroIntro(); };
+  if (hasGsap) gsap.to(p, { opacity: 0, duration: .9, ease: 'power3.out', onComplete: out }); else out();
+}
+if (hasGsap) gsap.fromTo('#pre-bar', { x: '-100%' }, { x: '200%', duration: 1.1, repeat: -1, ease: 'power1.inOut' });
+setTimeout(finishPreloader, 1500);
+addEventListener('load', () => setTimeout(finishPreloader, 700));
+
+})();
+</script>
+</body>
+</html>

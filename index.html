@@ -2208,10 +2208,72 @@
                 opacity: 1
             }
         }
+
+        /* ===== PRELOADER ===== */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2.25rem;
+            transition: opacity .7s ease, visibility .7s ease
+        }
+
+        #preloader.done {
+            opacity: 0;
+            visibility: hidden
+        }
+
+        #preloader img {
+            width: clamp(96px, 16vw, 150px);
+            height: auto;
+            animation: preIn .9s var(--ease-luxe) both
+        }
+
+        .pre-bar {
+            width: clamp(140px, 22vw, 220px);
+            height: 2px;
+            border-radius: 2px;
+            background: rgba(246, 236, 224, .14);
+            overflow: hidden
+        }
+
+        .pre-bar i {
+            display: block;
+            height: 100%;
+            width: 100%;
+            background: rgb(var(--brasa));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform .35s ease-out
+        }
+
+        @keyframes preIn {
+            from {
+                opacity: 0;
+                transform: scale(.92)
+            }
+        }
+
+        html.preloading,
+        html.preloading body {
+            overflow: hidden
+        }
     </style>
+    <script>document.documentElement.classList.add('preloading')</script>
 </head>
 
 <body>
+
+    <!-- PRELOADER -->
+    <div id="preloader" role="status" aria-label="Carregando">
+        <img src="assets/img/Log.png" alt="Logo" />
+        <div class="pre-bar"><i id="pre-fill"></i></div>
+    </div>
 
     <svg width="0" height="0" style="position:absolute" aria-hidden="true">
         <defs>
@@ -2880,6 +2942,25 @@
 
     <script>
         (function () {
+            // preloader
+            var pre = document.getElementById('preloader'), fill = document.getElementById('pre-fill');
+            var p = 0, loaded = false, start = Date.now(), MIN = 3000;
+            function set(v) { p = v; fill.style.transform = 'scaleX(' + v + ')' }
+            var tick = setInterval(function () {
+                if (!loaded && p < .9) set(p + (.9 - p) * .08);
+            }, 100);
+            function finish() {
+                loaded = true; clearInterval(tick); set(1);
+                setTimeout(function () {
+                    pre.classList.add('done');
+                    document.documentElement.classList.remove('preloading');
+                    setTimeout(function () { pre.remove() }, 800);
+                }, 450);
+            }
+            function onLoad() { setTimeout(finish, Math.max(0, MIN - (Date.now() - start))) }
+            if (document.readyState === 'complete') onLoad(); else window.addEventListener('load', onLoad);
+            setTimeout(function () { if (!loaded) finish() }, 8000);
+
             // contato (reserva)
             var rf = document.getElementById('reserva-form'), ok = document.getElementById('form-ok');
             var dt = document.getElementById('f-data');
